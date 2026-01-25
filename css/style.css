@@ -123,6 +123,7 @@
 #f-cont-qu {
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   height: 99%;
   width: 200px;
   background-color: brown;
@@ -131,7 +132,99 @@
 #f-cont-ans {
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   height: 99%;
   width: 100%;
   background-color: olivedrab;
 }
+
+.f-qu-n {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-qu-pn {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-qu-em {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-qu-serv {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-qu-city {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-ans-n {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  gap: 5px;
+  background-color: black;
+}
+
+.f-fn {
+  height: 30px;
+  width: 30%;
+  background-color: wheat;
+}
+
+
+.f-ans-pn {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-ans-em {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-ans-serv {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+.f-ans-city {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+}
+
+/* end of the form section */
