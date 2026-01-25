@@ -194,6 +194,11 @@
   background-color: wheat;
 }
 
+.f-ln {
+  height: 30px;
+  width: 70%;
+  background-color: wheat;
+}
 
 .f-ans-pn {
   display: flex;
