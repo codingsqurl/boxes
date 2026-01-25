@@ -131,6 +131,7 @@
 dealing with the questions
 the form is asking user */
 #f-cont-qu {
+  /* positioning */
   padding: 2px;
   display: flex;
   flex-direction: column;
@@ -138,11 +139,13 @@ the form is asking user */
   height: 99%;
   width: 200px;
   background-color: brown;
+  /* text */
 }
 
 /* section where user answers
 said questions */
 #f-cont-ans {
+  /* positioning */
   padding: 2px;
   display: flex;
   flex-direction: column;
@@ -150,52 +153,65 @@ said questions */
   height: 99%;
   width: 100%;
   background-color: olivedrab;
+  /* text */
 }
 
 /* questions */
 .f-qu-n {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .f-qu-pn {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .f-qu-em {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .f-qu-serv {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
+
 }
 
 .f-qu-city {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 /* end of questions */
 
 /* beginning of answers */
 .f-ans-n {
+  /* positioning */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -203,83 +219,212 @@ said questions */
   width: 100%;
   gap: 5px;
   background-color: black;
+  /* text */
 }
 
 .f-fn {
+  /* positioning */
   height: 30px;
   width: 30%;
   background-color: wheat;
+  /* text */
 }
 
 .f-ln {
+  /* positioning */
   height: 30px;
   width: 70%;
   background-color: wheat;
+  /* text */
 }
 
 .f-ans-pn {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .f-ans-em {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .f-ans-serv {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .f-ans-city {
+  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
   width: 100%;
   background-color: black;
+  /* text */
 }
 /* end of answers section */
 /* end of the form section */
 
 /* where videos will be stored */
 #media {
+  /* positioning */
   display: flex;
   flex-direction: column-reverse;
   height: 750px;
   width: 100%;
   background-color: cadetblue;
   padding: 2px;
+  /* text */
 }
 
 /* buttons at the bottom 
 of the media section */
 #med-button {
+  /* positioning */
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 9%;
   width: 100%;
   background-color: black;
+  /* text */
 }
 
 .med-pn {
+  /* positioning */
   height: 89%;
   width: 40%;
   background-color: brown;
+  /* text */
 }
 
 .med-em {
+  /* positioning */
   height: 89%;
   width: 40%;
   background-color: brown;
+  /* text */
+}
+
+/* beginning of reviews section of page */
+#reviews {
+  /* positioning */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 500px;
+  width: 100%;
+  padding: 2px;
+  background-color: grey;
+
+  /* text */
+}
+
+#r-title-box {
+  /* positioning */
+  padding: 2px;
+  display: flex;
+  justify-content: space-between;
+  height: 13%;
+  width: 100%;
+  background-color: burlywood;
+  /* text */
+}
+
+.r-t-n {
+  height: 99%;
+  width: 50%;
+  background-color: cadetblue;
+}
+
+.r-t-l {
+  height: 99%;
+  width: 20%;
+  background-color: cadetblue;
+}
+
+#r-cont {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 15px;
+  height: 85%;
+  width: 100%;
+  background-color: brown;
+}
+
+.r-1 {
+  height: 47%;
+  width: 47%;
+  background-color: aqua;
+}
+
+.r-2 {
+  height: 47%;
+  width: 47%;
+  background-color: blue;
+}
+
+.r-3 {
+  height: 47%;
+  width: 47%;
+  background-color: green;
+}
+
+.r-4 {
+  height: 47%;
+  width: 47%;
+  background-color: goldenrod;
+}
+/* end of reviews section */
+/* beginning of portfolio */
+#portfolio {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 5px;
+  height: 500px;
+  width: 100%;
+  background-color: goldenrod;
+}
+
+#port-title {
+  height: 15%;
+  width: 100%;
+  background-color: greenyellow;
+}
+
+#port-cont {
+  height: 65%;
+  width: 100%;
+  background-color: gold;
+}
+
+#port-icons {
+  height: 8%;
+  width: 100%;
+  background-color: orangered;
+}
+
+#port-quote {
+  height: 10%;
+  width: 100%;
+  background-color: olive;
 }
