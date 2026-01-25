@@ -1,4 +1,5 @@
 #tb {
+  padding: 2px;
   /* positioning */
   display: flex;
   flex-direction: column;
@@ -12,6 +13,7 @@
 
 
 #tb-co-con {
+  padding: 2px;
   /* positioning */
   display: flex;
   justify-content: center;
@@ -59,6 +61,7 @@
 }
 
 #tb-link-sec {
+  padding: 2px;
   /* positioning */
   height: 80px;
   width: 100%;
@@ -69,6 +72,7 @@
 
 /* beginning of the summary section */
 #sh-sum {
+  padding: 2px;
   /* positioning */
   display: flex;
   justify-content: center;
@@ -93,6 +97,7 @@
 
 /* beginning of form section */
 #top-form {
+  padding: 2px;
   /* positioning */
   display: flex;
   flex-direction: column;
@@ -104,6 +109,7 @@
 }
 
 #f-co-n {  
+  padding: 2px;
   /* positioning */
   height: 100px;
   background-color: greenyellow;
@@ -111,6 +117,7 @@
 }
 
 #f-cont {
+  padding: 2px;
   /* positioning */
   display: flex;
   gap: 10px;
@@ -120,7 +127,11 @@
   /* text */
 }
 
+/* specifies that we are
+dealing with the questions
+the form is asking user */
 #f-cont-qu {
+  padding: 2px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -129,7 +140,10 @@
   background-color: brown;
 }
 
+/* section where user answers
+said questions */
 #f-cont-ans {
+  padding: 2px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -138,6 +152,7 @@
   background-color: olivedrab;
 }
 
+/* questions */
 .f-qu-n {
   display: flex;
   justify-content: center;
@@ -177,7 +192,9 @@
   width: 100%;
   background-color: black;
 }
+/* end of questions */
 
+/* beginning of answers */
 .f-ans-n {
   display: flex;
   justify-content: space-between;
@@ -231,5 +248,38 @@
   width: 100%;
   background-color: black;
 }
-
+/* end of answers section */
 /* end of the form section */
+
+/* where videos will be stored */
+#media {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 750px;
+  width: 100%;
+  background-color: cadetblue;
+  padding: 2px;
+}
+
+/* buttons at the bottom 
+of the media section */
+#med-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 9%;
+  width: 100%;
+  background-color: black;
+}
+
+.med-pn {
+  height: 89%;
+  width: 40%;
+  background-color: brown;
+}
+
+.med-em {
+  height: 89%;
+  width: 40%;
+  background-color: brown;
+}
