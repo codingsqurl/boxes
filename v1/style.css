@@ -1,0 +1,297 @@
+* {
+  scroll-behavior: smoothest;
+}
+
+/*  
+making the whole 
+body into a flexbox
+*/
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+h3 {
+  font-size: larger;
+  font-weight: bolder;
+}
+
+/*
+this is the main header box
+*/
+#main-box1 {
+  display: flex;
+  justify-content: space-between;
+  gap: 500px;
+  height: 160px;
+  width: 100%;
+}
+
+/*
+this is where the menu 
+and phone number is stored
+*/
+.co-container {
+  font-family: "Bree Serif";
+  display: flex;
+  height: 100%;
+  width: 50%;
+  gap: 100px;
+  border-radius: 5px;
+  background-color: rgba(44, 188, 68, 0.15);
+}
+
+/*
+pretty self explanitory
+*/
+.menu {
+  height: 100%;
+  width: 20%;
+  background-color: rgba(4, 180, 100, 0.1);
+}
+
+/*
+this is the container 
+for co-bio and co-contact
+*/
+.mom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 50%;
+  background-color: rgba(4, 180, 100, 0.1);
+}
+
+/*
+phone number will be 
+stored in this location 
+as well as email
+*/
+.co-contact {
+  display: flex;
+  justify-content: space-between;
+  height: 30%;
+  width: 100%;
+}
+
+/*
+short summary of service areas
+*/
+.co-bio {
+  height: 50%;
+  width: 100%;
+}
+
+/*
+container where the
+name of the company/page
+title will be stored
+*/
+.name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  font-size: 100px;
+  border-radius: 5px;
+  background-color: rgba(44, 188, 68, 0.15);
+}
+
+#TH-name {
+  font-family: "Love Ya Like A Sister";
+  font-size: 98px;
+  background-color: none;
+}
+
+/*
+main focus point of the webpage
+*/
+#main-box2 {
+  font-family: "Bree Serif";
+  font-size: 25px;
+  display: flex;
+  align-items: end;
+  gap: 15px;
+  height: 900px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+/*
+this is going to be the scrolling box
+that hides all of the different sections
+*/
+.content-container {
+  display: flex;
+  justify-content: center;
+  height: 85%;
+  width: 50%;
+  margin-bottom: 1%;
+  border-radius: 5px;
+  background-color: rgba(44, 188, 68, 0.15);
+}
+
+/*
+this section will store
+all subsections in which
+user will need to scroll
+to reveal
+*/
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  overflow-y: auto;  
+  border-radius: 10px;
+  border: solid	rgba(4, 30, 31, 1);
+}
+
+.main-content::-webkit-scrollbar {
+  display: none;
+}
+
+.main-content > div {
+  flex-shrink: 0;
+}
+
+/*
+needs to be a row 
+not too small to where 
+it isn't readable 
+*/
+.icons {
+  height: 100px;
+  width: 50%;
+  margin-bottom: ;
+  border-radius: 5px;
+  background-color: rgba(44, 188, 68, 0.15);
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+/*
+this will be another type of a form section 
+there will be about 3 or 4 of these
+*/
+#contact-section {
+  height: 200px;
+  width: 100%;
+  border-radius: 10px;
+  background-color:	rgba(4, 30, 31, 0.2);
+  overflow-y: auto;  
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+/*
+section telling the 
+user who we are 
+*/
+#info {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  background-color:	rgba(4, 30, 31, 0.2);
+  overflow-y: auto;  
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+/*
+this is where pics and videos 
+will be stored for display
+*/
+#main-media {
+  width: 100%;
+  height: 300px;
+  border-radius: 15px;
+  background-color:	rgba(4, 30, 31, 0.2);
+  overflow-y: auto;  
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+/*
+this is probably going to
+be the largest section 
+size wise 
+there will be summaries of 
+why each type of tree care
+is important
+*/
+#faqs {
+  background-color:	rgba(4, 30, 31, 0.2);
+  border-radius: 15px;
+  width: 100%;
+  height: 400px;
+  overflow-y: auto;  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+  gap: 5px;
+}
+
+/*
+where else you can find
+us on the internet
+*/
+#links {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  background-color:	rgba(4, 30, 31, 0.2);
+  overflow-y: auto;  
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+/*
+need to integrate apis from 
+services providing customer
+reviews
+the real and honest ones
+*/
+#review {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  background-color:	rgba(4, 30, 31, 0.2);
+  overflow-y: auto;  
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+/*
+a form will be inside here
+leading to some type of
+automation service
+*/
+#free-estimate {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  background-color:	rgba(4, 30, 31, 0.2);
+  overflow-y: auto;  
+  border:	rgba(4, 30, 31, 1);
+  border-style: solid;
+  backface-visibility: visible;
+}
+
+@media screen {
+  
+}

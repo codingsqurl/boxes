@@ -1,0 +1,21 @@
+this is the rgba conversion of the colors Holly sent
+
+
+	light earthy green -
+background-color:	rgba(157, 195, 52, 1);
+
+
+	black -
+background-color:	rgba(4, 30, 31, 1);
+
+
+	darkest of greens -
+background-color:	rgba(4, 180, 100, 1);
+
+
+	med green - 
+background-color:	rgba(44, 188, 68, 1);
+
+
+	white - 
+background-color:	rgba(236, 244, 252, 1);

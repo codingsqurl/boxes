@@ -1,0 +1,160 @@
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+/* just a container
+for header content */
+#top-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  height: 260px;
+  width: 100%;
+  background-color: teal;
+}
+
+/* container
+for name and phone */
+#tb1 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  gap: 15px;
+  height: 120px;
+  width: 95%;
+  background-color: beige;
+}
+
+/* container for
+phone number and email */
+#pn-em {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  background-color: black;
+}
+
+/* name container */
+#name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  width: 50%;
+  background-color: black;
+  /* font
+  
+  */
+  font-size: 40px;
+}
+
+
+/* container for links */
+#tb2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  width: 95%;
+  background-color: beige;
+}
+
+
+
+#summary {
+  height: 300px;
+  width: 100%;
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#form {
+  height: 500px;
+  width: 100%;
+  background-color: blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#media {
+  height: 900px;
+  width: 100%;
+  background-color: burlywood;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#reviews {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  width: 100%;
+  background-color: aquamarine;
+}
+
+.r-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  background-color: green;
+}
+
+.sect-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 500px;
+  width: fit-content;
+}
+
+
+.rev-logo {
+}
+
+.r-sect {
+  height: 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rev1 {
+  height: 50px;
+  width: 50px;
+  background-color: brown;
+}
+
+.rev2 {
+  height: 50px;
+  width: 50px;
+  background-color: brown;
+}
+
+.rev3 {
+  height: 50px;
+  width: 50px;
+  background-color: brown;
+}
+
+
+.rev4 {
+  height: 50px;
+  width: 50px;
+  background-color: brown;
+}
+
