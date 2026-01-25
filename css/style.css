@@ -1,0 +1,137 @@
+#tb {
+  /* positioning */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
+  width: 100%;
+  background-color: darkgoldenrod;
+  /* text */
+}
+
+
+#tb-co-con {
+  /* positioning */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  gap: 1%;
+  width: 100%;
+  /* text */
+}
+
+.tb-co-con {
+  /* positioning */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4px;
+  height: 132px;
+  width: 50%;
+  background-color: black;
+  /* text */
+}
+
+.tb-co-ph {
+  /* positioning */
+  height: 60px;
+  width: 100%;
+  background-color: blue;
+  /* text */
+}
+
+.tb-co-em {
+  /* positioning */
+  height: 60px;
+  width: 100%;
+  background-color: brown;
+  /* text */
+}
+
+.co-n-con {
+  /* positioning */
+  height: 80px;
+  width: 50%;
+  background-color: brown;
+  /* text */
+}
+
+#tb-link-sec {
+  /* positioning */
+  height: 80px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+/* end of top bar section */
+
+/* beginning of the summary section */
+#sh-sum {
+  /* positioning */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  width: 100%;
+  background-color: green;
+  /* text */
+}
+
+.tb-sum {
+  /* positioning */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 98%;
+  width: 99%;
+  background-color: rebeccapurple;
+  /* text */
+}
+/* end of the summary section */
+
+/* beginning of form section */
+#top-form {
+  /* positioning */
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  height: 600px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+#f-co-n {  
+  /* positioning */
+  height: 100px;
+  background-color: greenyellow;
+  /* text */
+}
+
+#f-cont {
+  /* positioning */
+  display: flex;
+  gap: 10px;
+  padding: 1%;
+  height: 100%;
+  background-color: blanchedalmond;
+  /* text */
+}
+
+#f-cont-qu {
+  display: flex;
+  flex-direction: column;
+  height: 99%;
+  width: 200px;
+  background-color: brown;
+}
+
+#f-cont-ans {
+  display: flex;
+  flex-direction: column;
+  height: 99%;
+  width: 100%;
+  background-color: olivedrab;
+}
