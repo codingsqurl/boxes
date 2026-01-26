@@ -10,11 +10,11 @@ background-color:	rgba(4, 30, 31, 1);
 
 
 	darkest of greens -
-background-color:	rgba(4, 180, 100, 1);
+background-color:	rgba(4, 180, 101, 0.69);
 
 
 	med green - 
-background-color:	rgba(44, 188, 68, 1);
+background-color:	rgba(32, 137, 49, 0.72);
 
 
 	white - 

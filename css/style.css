@@ -1,20 +1,17 @@
 #tb {
   padding: 2px;
-  /* positioning */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 210px;
   width: 100%;
-  background-color: darkgoldenrod;
   /* text */
 }
 
 
 #tb-co-con {
   padding: 2px;
-  /* positioning */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,47 +22,41 @@
 }
 
 .tb-co-con {
-  /* positioning */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 4px;
   height: 132px;
   width: 50%;
-  background-color: black;
   /* text */
 }
 
 .tb-co-ph {
-  /* positioning */
   height: 60px;
   width: 100%;
-  background-color: blue;
+  background-color:	rgba(4, 180, 101, 0.541);
   /* text */
 }
 
 .tb-co-em {
-  /* positioning */
   height: 60px;
   width: 100%;
-  background-color: brown;
+  background-color:	rgba(4, 180, 101, 0.534);
   /* text */
 }
 
 .co-n-con {
-  /* positioning */
   height: 80px;
   width: 50%;
-  background-color: brown;
+  background-color:	rgba(4, 180, 101, 0.543);
   /* text */
 }
 
 #tb-link-sec {
   padding: 2px;
-  /* positioning */
   height: 80px;
   width: 100%;
-  background-color: black;
+  background-color:	rgba(4, 180, 101, 0.561);
   /* text */
 }
 /* end of top bar section */
@@ -73,24 +64,21 @@
 /* beginning of the summary section */
 #sh-sum {
   padding: 2px;
-  /* positioning */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 300px;
   width: 100%;
-  background-color: green;
   /* text */
 }
 
 .tb-sum {
-  /* positioning */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 98%;
   width: 99%;
-  background-color: rebeccapurple;
+  background-color:	rgba(32, 137, 50, 0.512);
   /* text */
 }
 /* end of the summary section */
@@ -98,32 +86,27 @@
 /* beginning of form section */
 #top-form {
   padding: 2px;
-  /* positioning */
   display: flex;
   flex-direction: column;
   padding: 4px;
   height: 600px;
   width: 100%;
-  background-color: black;
   /* text */
 }
 
 #f-co-n {  
   padding: 2px;
-  /* positioning */
   height: 100px;
-  background-color: greenyellow;
+  background-color:	rgba(4, 180, 101, 0.319);
   /* text */
 }
 
 #f-cont {
   padding: 2px;
-  /* positioning */
   display: flex;
   gap: 10px;
   padding: 1%;
   height: 100%;
-  background-color: blanchedalmond;
   /* text */
 }
 
@@ -131,7 +114,6 @@
 dealing with the questions
 the form is asking user */
 #f-cont-qu {
-  /* positioning */
   padding: 2px;
   display: flex;
   flex-direction: column;
@@ -145,7 +127,6 @@ the form is asking user */
 /* section where user answers
 said questions */
 #f-cont-ans {
-  /* positioning */
   padding: 2px;
   display: flex;
   flex-direction: column;
@@ -158,7 +139,6 @@ said questions */
 
 /* questions */
 .f-qu-n {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -168,7 +148,6 @@ said questions */
 }
 
 .f-qu-pn {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -178,7 +157,6 @@ said questions */
 }
 
 .f-qu-em {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -188,7 +166,6 @@ said questions */
 }
 
 .f-qu-serv {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -199,7 +176,6 @@ said questions */
 }
 
 .f-qu-city {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -211,7 +187,6 @@ said questions */
 
 /* beginning of answers */
 .f-ans-n {
-  /* positioning */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -223,7 +198,6 @@ said questions */
 }
 
 .f-fn {
-  /* positioning */
   height: 30px;
   width: 30%;
   background-color: wheat;
@@ -231,7 +205,6 @@ said questions */
 }
 
 .f-ln {
-  /* positioning */
   height: 30px;
   width: 70%;
   background-color: wheat;
@@ -239,7 +212,6 @@ said questions */
 }
 
 .f-ans-pn {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -249,7 +221,6 @@ said questions */
 }
 
 .f-ans-em {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -259,7 +230,6 @@ said questions */
 }
 
 .f-ans-serv {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -269,7 +239,6 @@ said questions */
 }
 
 .f-ans-city {
-  /* positioning */
   display: flex;
   justify-content: center;
   height: 50px;
@@ -282,61 +251,15 @@ said questions */
 
 /* where videos will be stored */
 #media {
-  /* positioning */
   display: flex;
   flex-direction: column-reverse;
   height: 750px;
   width: 100%;
-  background-color: cadetblue;
-  padding: 2px;
-  /* text */
-}
-
-/* buttons at the bottom 
-of the media section */
-#med-button {
-  /* positioning */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 9%;
-  width: 100%;
-  background-color: black;
-  /* text */
-}
-
-.med-pn {
-  /* positioning */
-  height: 89%;
-  width: 40%;
-  background-color: brown;
-  /* text */
-}
-
-.med-em {
-  /* positioning */
-  height: 89%;
-  width: 40%;
-  background-color: brown;
-  /* text */
-}
-
-/* beginning of reviews section of page */
-#reviews {
-  /* positioning */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  height: 500px;
-  width: 100%;
-  padding: 2px;
-  background-color: grey;
 
   /* text */
 }
 
 #r-title-box {
-  /* positioning */
   padding: 2px;
   display: flex;
   justify-content: space-between;
@@ -428,3 +351,4 @@ of the media section */
   width: 100%;
   background-color: olive;
 }
+
