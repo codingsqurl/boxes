@@ -1,0 +1,166 @@
+
+/* beginning of form section */
+#top-form {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  height: 600px;
+  width: 100%;
+  /* text */
+}
+
+#f-co-n {  
+  padding: 2px;
+  height: 100px;
+  background-color:	rgba(4, 180, 101, 0.319);
+  /* text */
+}
+
+#f-cont {
+  padding: 2px;
+  display: flex;
+  gap: 10px;
+  padding: 1%;
+  height: 100%;
+  /* text */
+}
+
+/* specifies that we are
+dealing with the questions
+the form is asking user */
+#f-cont-qu {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 99%;
+  width: 200px;
+  background-color: rgba(228, 135, 5, 0.63);
+  /* text */
+}
+
+/* section where user answers
+said questions */
+#f-cont-ans {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 99%;
+  width: 100%;
+  background-color: rgba(228, 135, 5, 0.63);
+  /* text */
+}
+
+/* questions */
+.f-qu-n {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+.f-qu-pn {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+.f-qu-em {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+.f-qu-serv {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+
+}
+
+.f-qu-city {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+/* end of questions */
+
+/* beginning of answers */
+.f-ans-n {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  gap: 5px;
+  background-color: rgb(41, 146, 122);
+  /* text */
+}
+
+.f-fn {
+  height: 30px;
+  width: 30%;
+  background-color: rgba(33, 87, 51, 0.63);
+  /* text */
+}
+
+.f-ln {
+  height: 30px;
+  width: 70%;
+  background-color: rgba(33, 87, 51, 0.63);
+  /* text */
+}
+
+.f-ans-pn {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+.f-ans-em {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+.f-ans-serv {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+
+.f-ans-city {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  background-color: black;
+  /* text */
+}
+/* end of answers section */
+/* end of the form section */
