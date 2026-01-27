@@ -34,7 +34,7 @@
 .tb-co-ph {
   height: 60px;
   width: 100%;
-  background-color:	rgba(4, 180, 101, 0.541);
+  background-color:	rgba(9, 180, 43, 0.541);
   /* text */
 }
 
@@ -42,6 +42,7 @@
   height: 60px;
   width: 100%;
   background-color:	rgba(4, 180, 101, 0.534);
+  background-color:	rgba(9, 180, 43, 0.541);
   /* text */
 }
 
@@ -49,6 +50,7 @@
   height: 80px;
   width: 50%;
   background-color:	rgba(4, 180, 101, 0.543);
+  background-color:	rgba(9, 180, 43, 0.541);
   /* text */
 }
 
@@ -57,6 +59,7 @@
   height: 80px;
   width: 100%;
   background-color:	rgba(4, 180, 101, 0.561);
+  background-color:	rgba(9, 180, 43, 0.541);
   /* text */
 }
 /* end of top bar section */
@@ -78,7 +81,7 @@
   align-items: center;
   height: 98%;
   width: 99%;
-  background-color:	rgba(32, 137, 50, 0.512);
+  background-color:	rgba(22, 108, 42, 0.632);
   /* text */
 }
 /* end of the summary section */
@@ -120,7 +123,7 @@ the form is asking user */
   justify-content: space-evenly;
   height: 99%;
   width: 200px;
-  background-color: brown;
+  background-color: rgba(228, 135, 5, 0.63);
   /* text */
 }
 
@@ -133,7 +136,7 @@ said questions */
   justify-content: space-evenly;
   height: 99%;
   width: 100%;
-  background-color: olivedrab;
+  background-color: rgba(228, 135, 5, 0.63);
   /* text */
 }
 
@@ -193,21 +196,21 @@ said questions */
   height: 50px;
   width: 100%;
   gap: 5px;
-  background-color: black;
+  background-color: rgb(41, 146, 122);
   /* text */
 }
 
 .f-fn {
   height: 30px;
   width: 30%;
-  background-color: wheat;
+  background-color: rgba(33, 87, 51, 0.63);
   /* text */
 }
 
 .f-ln {
   height: 30px;
   width: 70%;
-  background-color: wheat;
+  background-color: rgba(33, 87, 51, 0.63);
   /* text */
 }
 

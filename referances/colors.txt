@@ -19,3 +19,11 @@ background-color:	rgba(32, 137, 49, 0.72);
 
 	white - 
 background-color:	rgba(236, 244, 252, 1);
+
+
+  going to be some tree browns here -
+background-color: rgba(228, 135, 5, 0.63);
+
+
+	some beetle hit colors -
+background-color: rgb(41, 146, 122);
