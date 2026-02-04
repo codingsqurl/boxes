@@ -70,7 +70,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 150px;
   width: 100%;
   /* text */
 }
@@ -168,7 +168,7 @@
 
 #port-title {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   height: 15%;
   width: 100%;
   background-color: greenyellow;
@@ -199,6 +199,5 @@
 }
 
 .paul-pic {
-  height: 100px;
-  width: 100px;
+  width: 60px;
 }
