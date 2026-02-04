@@ -167,9 +167,17 @@
 }
 
 #port-title {
+  display: flex;
+  justify-content: space-between;
   height: 15%;
   width: 100%;
   background-color: greenyellow;
+}
+
+.paul-port{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 #port-cont {
@@ -190,3 +198,7 @@
   background-color: olive;
 }
 
+.paul-pic {
+  height: 100px;
+  width: 100px;
+}
