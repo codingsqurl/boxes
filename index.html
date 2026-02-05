@@ -2,76 +2,550 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <title>Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Tree Hoppers - Expert tree care services in Colorado Springs. ISA Certified Arborists providing pruning, storm damage recovery, fire mitigation, and tree removal.">
+  <!-- Safari/iOS specific -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=yes">
+  <!-- Theme color for browser chrome -->
+  <meta name="theme-color" content="#041e1f">
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Fonts with fallback display -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Tree Hoppers | Expert Tree Care - Colorado Springs</title>
 </head>
 <body>
-  <!-- top-bar section -->
-  <div id="tb">
-    <div id="tb-link-sec"></div>
-    <div id="tb-co-con">
-      <div class="tb-co-con">
-        <div class="tb-co-ph"><a href="">(719)287-8836</a></div>
-        <div class="tb-co-em"><a href="">treehopperscos.com</a></div>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="tree-icon">🌲</div>
+      <div class="loader-text">Tree Hoppers</div>
+      <div class="loader-bar"><div class="loader-progress"></div></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-icon">🌲</span>
+        <span class="logo-text">Tree Hoppers</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#gallery" class="nav-link">Our Work</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#reviews" class="nav-link">Reviews</a></li>
+        <li><a href="#contact" class="nav-link nav-cta">Get Quote</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">ISA Certified Arborists</div>
+      <h1 class="hero-title">
+        <span class="title-line">Expert Tree Care</span>
+        <span class="title-line accent">For Colorado</span>
+      </h1>
+      <p class="hero-subtitle">Protecting your property and preserving nature since 2017</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number" data-target="500">0</span>+
+          <span class="stat-label">Trees Served</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-target="15">0</span>+
+          <span class="stat-label">Years Experience</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-target="100">0</span>%
+          <span class="stat-label">Satisfaction</span>
+        </div>
       </div>
-      <div class="co-n-con">
-        <div class="co-n">Tree Hoppers</div>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">Get Free Estimate</a>
+        <a href="tel:7192878836" class="btn btn-secondary">
+          <span class="btn-icon">📞</span> (719) 287-8836
+        </a>
       </div>
     </div>
-  </div>
-  <!-- top-bar end -->
-  <!-- summary section -->
-  <div id="sh-sum">
-    <p class="tb-sum">We provide expert tree care services that enhance the safety, health, and beauty of Colorado's natural landscapes. From pruning and storm damage recovery to fire mitigation and responsible removal, we protect your property while preserving the environment for the future. <br>
-    </p>
-  </div>
-  <!-- end of summary section -->
-  <!-- videos go here -->
-  <div id="media">
-    <div id="med-button">
-      <div class="med-pn"><a href="">(719)287-8836</a></div>
-      <div class="med-em"><a href="">treehopperscos@gmail.com</a></div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
     </div>
-  </div>
-  <!-- end of videos section -->
-  <!-- beginning of reviews section -->
-  <div id="reviews">
-    <div id="r-title-box">
-      <div class="r-t-n">Tree Hoppers</div>
-      <div class="r-t-l"></div>
-    </div>
-    <div id="r-cont">
-      <div class="r-1"></div>
-      <div class="r-2"></div>
-      <div class="r-3"></div>
-      <div class="r-4"></div>
-    </div>
-  </div>
-  <!-- end of reviews -->
-  <!-- start of second form all same css as first -->
-  <!-- paul portfolio -->
-  <!-- none of this has css -->
-  <div id="portfolio">
-    <div id="port-title">
-      <div class="paul-pic"><img src="pictures/paul.JPG" alt="paul"></div>
-      <div class="paul-port">
-        <div class="paul-pn"><a href="">(719)287-8836</a></div>
-        <div class="paul-em"><a href="">treehopperscos@gmail.com</a></div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">What We Do</span>
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-subtitle">Professional tree care solutions tailored to Colorado's unique landscape</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card" data-aos="fade-up">
+          <div class="service-icon">✂️</div>
+          <h3>Tree Pruning</h3>
+          <p>Expert shaping and maintenance to promote healthy growth and enhance your property's beauty.</p>
+          <ul class="service-features">
+            <li>Crown thinning & shaping</li>
+            <li>Deadwood removal</li>
+            <li>Vista pruning</li>
+          </ul>
+        </div>
+        <div class="service-card featured" data-aos="fade-up" data-aos-delay="100">
+          <div class="service-badge">Most Popular</div>
+          <div class="service-icon">🔥</div>
+          <h3>Fire Mitigation</h3>
+          <p>Protect your home from wildfire risk with our comprehensive defensible space services.</p>
+          <ul class="service-features">
+            <li>Defensible space creation</li>
+            <li>Ladder fuel removal</li>
+            <li>Insurance compliance</li>
+          </ul>
+        </div>
+        <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="service-icon">⛈️</div>
+          <h3>Storm Damage</h3>
+          <p>24/7 emergency response for storm-damaged trees to secure your property quickly.</p>
+          <ul class="service-features">
+            <li>Emergency response</li>
+            <li>Hazard assessment</li>
+            <li>Insurance documentation</li>
+          </ul>
+        </div>
+        <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="service-icon">🪓</div>
+          <h3>Tree Removal</h3>
+          <p>Safe, efficient removal of hazardous or unwanted trees with complete cleanup.</p>
+          <ul class="service-features">
+            <li>Hazardous tree removal</li>
+            <li>Stump grinding</li>
+            <li>Complete debris cleanup</li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div id="port-cont">
-      <div class="hailey-knows"></div>
-      <div class="hailey-knows"></div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Portfolio</span>
+        <h2 class="section-title">Our Work</h2>
+        <p class="section-subtitle">See the Tree Hoppers difference in action</p>
+      </div>
+      <div class="gallery-filter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="removal">Removal</button>
+        <button class="filter-btn" data-filter="pruning">Pruning</button>
+        <button class="filter-btn" data-filter="equipment">Equipment</button>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item" data-category="removal">
+          <img src="pictures/tree-hoppin.jpg" alt="Tree removal in progress" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Professional Removal</span>
+            <span class="gallery-category">Tree Removal</span>
+          </div>
+        </div>
+        <div class="gallery-item large" data-category="removal">
+          <img src="pictures/hang-ten.JPG" alt="Arborist climbing" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Expert Climbing</span>
+            <span class="gallery-category">Skilled Arborists</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="pruning">
+          <img src="pictures/saw-dust.JPG" alt="Tree cutting work" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Precision Cutting</span>
+            <span class="gallery-category">Tree Pruning</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="equipment">
+          <img src="pictures/truck.JPG" alt="Tree Hoppers truck" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Our Fleet</span>
+            <span class="gallery-category">Equipment</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="removal">
+          <img src="pictures/tree-hoppin-2.jpg" alt="Tree work" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Safe Operations</span>
+            <span class="gallery-category">Tree Removal</span>
+          </div>
+        </div>
+        <div class="gallery-item large" data-category="equipment">
+          <img src="pictures/back-of-chipper.jpg" alt="Wood chipper" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Professional Equipment</span>
+            <span class="gallery-category">Wood Chipper</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="pruning">
+          <img src="pictures/saw-start.JPG" alt="Starting chainsaw" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Ready to Work</span>
+            <span class="gallery-category">Professional Tools</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="pruning">
+          <img src="pictures/saw-dust-2.JPG" alt="Tree cutting" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-title">Detailed Work</span>
+            <span class="gallery-category">Tree Pruning</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="port-icons">
-      <i class="fa-brands fa-facebook-messenger"></i>
-      <i class="fa-brands fa-yelp"></i>
-      <i class="fa-brands fa-instagram"></i>
-      <i class="fa-brands fa-google"></i>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image">
+          <img src="pictures/paul.JPG" alt="Paul Hopkins - Owner and ISA Certified Arborist">
+          <div class="about-badge">
+            <span class="badge-years">15+</span>
+            <span class="badge-text">Years</span>
+          </div>
+        </div>
+        <div class="about-content">
+          <span class="section-tag">Meet The Owner</span>
+          <h2 class="section-title">Paul Hopkins</h2>
+          <p class="about-role">ISA Certified Arborist & Founder</p>
+          <p class="about-text">
+            With over 15 years in arboriculture, I founded Tree Hoppers in 2017 with a simple mission:
+            provide honest, expert tree care that puts safety and the environment first. As an ISA
+            Certified Arborist since 2009, I bring professional knowledge and genuine passion to every job.
+          </p>
+          <p class="about-text">
+            We're not just cutting trees – we're caring for Colorado's urban forest. From the Front Range
+            to the mountains, we understand the unique challenges our trees face and how to keep them
+            healthy for generations to come.
+          </p>
+          <div class="about-features">
+            <div class="feature">
+              <span class="feature-icon">✓</span>
+              <span>ISA Certified</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">✓</span>
+              <span>Fully Insured</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">✓</span>
+              <span>Free Estimates</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">✓</span>
+              <span>Local Owned</span>
+            </div>
+          </div>
+          <div class="about-cta">
+            <a href="tel:7192878836" class="btn btn-primary">Call Paul: (719) 287-8836</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="port-quote"></div>
-  </div>
+  </section>
+
+  <!-- Reviews Section -->
+  <section id="reviews">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Testimonials</span>
+        <h2 class="section-title">What Customers Say</h2>
+        <div class="reviews-summary">
+          <div class="rating-display">
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-score">5.0</span>
+          </div>
+          <p class="rating-text">Based on <span id="review-count">0</span> reviews</p>
+        </div>
+      </div>
+
+      <div class="reviews-carousel">
+        <button class="carousel-btn prev" aria-label="Previous reviews">‹</button>
+        <div class="reviews-track" id="reviews-container">
+          <!-- Reviews will be loaded dynamically -->
+          <div class="review-card skeleton">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-text short"></div>
+          </div>
+          <div class="review-card skeleton">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-text short"></div>
+          </div>
+          <div class="review-card skeleton">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-text short"></div>
+          </div>
+        </div>
+        <button class="carousel-btn next" aria-label="Next reviews">›</button>
+      </div>
+
+      <div class="reviews-sources">
+        <a href="https://www.google.com/search?q=tree+hoppers+colorado+springs+reviews" target="_blank" class="source-link">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="source-icon"> Google Reviews
+        </a>
+        <a href="https://www.yelp.com/biz/tree-hoppers-colorado-springs" target="_blank" class="source-link">
+          <img src="icons/yelp-brands-solid-full.svg" alt="Yelp" class="source-icon"> Yelp Reviews
+        </a>
+        <a href="https://www.facebook.com/treehopperscos/reviews" target="_blank" class="source-link">
+          <img src="icons/facebook-messenger-brands-solid-full.svg" alt="Facebook" class="source-icon"> Facebook Reviews
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Area Map -->
+  <section id="service-area">
+    <div class="container">
+      <div class="map-content">
+        <div class="map-info">
+          <span class="section-tag">Coverage</span>
+          <h2 class="section-title">Service Area</h2>
+          <p>Proudly serving Southern Colorado communities:</p>
+          <ul class="area-list">
+            <li><span class="area-icon">📍</span> Colorado Springs</li>
+            <li><span class="area-icon">📍</span> Woodland Park</li>
+            <li><span class="area-icon">📍</span> Monument</li>
+            <li><span class="area-icon">📍</span> Castle Rock</li>
+            <li><span class="area-icon">📍</span> Fountain</li>
+            <li><span class="area-icon">📍</span> Falcon</li>
+            <li><span class="area-icon">📍</span> Pueblo</li>
+            <li><span class="area-icon">📍</span> Manitou Springs</li>
+          </ul>
+          <p class="area-note">Don't see your area? Give us a call – we may still be able to help!</p>
+        </div>
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <span class="section-tag">Get In Touch</span>
+          <h2 class="section-title">Free Estimate</h2>
+          <p class="contact-text">Ready to take care of your trees? Contact us for a free, no-obligation estimate.</p>
+
+          <div class="contact-methods">
+            <a href="tel:7192878836" class="contact-method">
+              <span class="method-icon">📞</span>
+              <div class="method-content">
+                <span class="method-label">Call Us</span>
+                <span class="method-value">(719) 287-8836</span>
+              </div>
+            </a>
+            <a href="mailto:treehopperscos@gmail.com" class="contact-method">
+              <span class="method-icon">✉️</span>
+              <div class="method-content">
+                <span class="method-label">Email Us</span>
+                <span class="method-value">treehopperscos@gmail.com</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="social-links">
+            <a href="https://www.facebook.com/treehopperscos/" target="_blank" class="social-link" aria-label="Facebook">
+              <img src="icons/facebook-messenger-brands-solid-full.svg" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/treehopperscos/" target="_blank" class="social-link" aria-label="Instagram">
+              <img src="icons/instagram-brands-solid-full.svg" alt="Instagram">
+            </a>
+            <a href="https://www.yelp.com/biz/tree-hoppers-colorado-springs" target="_blank" class="social-link" aria-label="Yelp">
+              <img src="icons/yelp-brands-solid-full.svg" alt="Yelp">
+            </a>
+          </div>
+        </div>
+
+        <form id="contact-form" class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="(719) 000-0000" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="service">Service Needed</label>
+              <select id="service" name="service" required>
+                <option value="">Select Service</option>
+                <option value="pruning">Tree Pruning</option>
+                <option value="removal">Tree Removal</option>
+                <option value="fire">Fire Mitigation</option>
+                <option value="storm">Storm Damage</option>
+                <option value="consultation">Consultation</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" placeholder="Colorado Springs" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Tell Us About Your Trees</label>
+            <textarea id="message" name="message" rows="4" placeholder="Describe your project or any concerns..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            <span class="btn-text">Request Free Quote</span>
+            <span class="btn-loader"></span>
+          </button>
+          <p class="form-note">We typically respond within 24 hours</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">🌲 Tree Hoppers</span>
+          <p>Expert tree care for Colorado's landscapes since 2017.</p>
+          <div class="footer-social">
+            <a href="https://www.facebook.com/treehopperscos/" target="_blank" aria-label="Facebook">
+              <img src="icons/facebook-messenger-brands-solid-full.svg" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/treehopperscos/" target="_blank" aria-label="Instagram">
+              <img src="icons/instagram-brands-solid-full.svg" alt="Instagram">
+            </a>
+            <a href="https://www.yelp.com/biz/tree-hoppers-colorado-springs" target="_blank" aria-label="Yelp">
+              <img src="icons/yelp-brands-solid-full.svg" alt="Yelp">
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">Tree Pruning</a></li>
+            <li><a href="#services">Fire Mitigation</a></li>
+            <li><a href="#services">Storm Damage</a></li>
+            <li><a href="#services">Tree Removal</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#gallery">Our Work</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#service-area">Service Area</a></li>
+          </ul>
+        </div>
+        <div class="footer-contact">
+          <h4>Contact</h4>
+          <p><a href="tel:7192878836">(719) 287-8836</a></p>
+          <p><a href="mailto:treehopperscos@gmail.com">treehopperscos@gmail.com</a></p>
+          <p>Colorado Springs, CO</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Tree Hoppers. All rights reserved.</p>
+        <p>ISA Certified • Fully Insured • Locally Owned</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Google Maps API -->
+  <script>
+    // Initialize map with service area
+    function initMap() {
+      const coloradoSprings = { lat: 38.8339, lng: -104.8214 };
+
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 9,
+        center: coloradoSprings,
+        styles: [
+          { featureType: 'all', elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
+          { featureType: 'all', elementType: 'labels.text.stroke', stylers: [{ color: '#1a1a2e' }] },
+          { featureType: 'all', elementType: 'labels.text.fill', stylers: [{ color: '#8892b0' }] },
+          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d1117' }] },
+          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2d3748' }] },
+          { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#1e3a29' }] }
+        ],
+        disableDefaultUI: true,
+        zoomControl: true
+      });
+
+      // Service area marker
+      new google.maps.Marker({
+        position: coloradoSprings,
+        map: map,
+        title: 'Tree Hoppers - Colorado Springs',
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: '#9dc334',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 3
+        }
+      });
+
+      // Service area circle
+      new google.maps.Circle({
+        strokeColor: '#9dc334',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#9dc334',
+        fillOpacity: 0.15,
+        map: map,
+        center: coloradoSprings,
+        radius: 80000 // 80km radius
+      });
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+
+  <!-- Main JavaScript -->
+  <script src="js/main.js"></script>
 </body>
 </html>
