@@ -316,50 +316,55 @@ function initReviewsCarousel() {
     scrollTrack(scrollAmount);
   });
 
-  // Auto-scroll with different speeds for mobile vs desktop
+  // Auto-scroll with pause on each review for reading
   var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  var autoScrollInterval = isTouchDevice ? 15000 : 12000; // 15 seconds for mobile, 12 for desktop
+  var readingTime = isTouchDevice ? 10000 : 8000; // Time to read each review: 10s mobile, 8s desktop
+  var scrollDuration = isTouchDevice ? 1200 : 600; // Scroll animation duration
+  var isPaused = false;
 
-  // Auto-scroll
-  window.reviewsAutoScroll = setInterval(function() {
-    if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
-      scrollToStart();
-    } else {
-      scrollTrack(scrollAmount);
-    }
-  }, autoScrollInterval);
+  function startAutoScroll() {
+    if (isPaused) return;
 
-  // Pause auto-scroll on hover (desktop)
-  track.addEventListener('mouseenter', function() {
-    clearInterval(window.reviewsAutoScroll);
-  });
-
-  track.addEventListener('mouseleave', function() {
-    window.reviewsAutoScroll = setInterval(function() {
+    window.reviewsAutoScroll = setTimeout(function() {
       if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
         scrollToStart();
       } else {
         scrollTrack(scrollAmount);
       }
-    }, autoScrollInterval);
+      // Wait for scroll to complete, then pause for reading
+      setTimeout(startAutoScroll, scrollDuration + readingTime);
+    }, readingTime);
+  }
+
+  // Start the auto-scroll
+  startAutoScroll();
+
+  // Pause auto-scroll on hover (desktop)
+  track.addEventListener('mouseenter', function() {
+    isPaused = true;
+    clearTimeout(window.reviewsAutoScroll);
+  });
+
+  track.addEventListener('mouseleave', function() {
+    isPaused = false;
+    startAutoScroll();
   });
 
   // Pause auto-scroll on touch (mobile)
   if (isTouchDevice) {
+    var resumeTimeout;
+
     track.addEventListener('touchstart', function() {
-      clearInterval(window.reviewsAutoScroll);
+      isPaused = true;
+      clearTimeout(window.reviewsAutoScroll);
+      clearTimeout(resumeTimeout);
     });
 
     track.addEventListener('touchend', function() {
       // Resume auto-scroll after 5 seconds of inactivity
-      setTimeout(function() {
-        window.reviewsAutoScroll = setInterval(function() {
-          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
-            scrollToStart();
-          } else {
-            scrollTrack(scrollAmount);
-          }
-        }, autoScrollInterval);
+      resumeTimeout = setTimeout(function() {
+        isPaused = false;
+        startAutoScroll();
       }, 5000);
     });
   }
