@@ -870,6 +870,9 @@ a {
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 20px 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: pan-x;
 }
 
 .reviews-track::-webkit-scrollbar {
@@ -1479,9 +1482,7 @@ a {
   }
 
   .carousel-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
+    display: none;
   }
 
   .area-list {
@@ -1519,6 +1520,15 @@ a {
   .review-card {
     -webkit-flex: 0 0 280px;
     flex: 0 0 280px;
+  }
+
+  .reviews-track {
+    gap: 20px;
+    padding: 20px 10px;
+  }
+
+  .reviews-carousel {
+    padding: 0;
   }
 
   .contact-form {

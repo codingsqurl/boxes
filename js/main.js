@@ -251,7 +251,12 @@ function initReviewsCarousel() {
   var prevBtn = document.querySelector('.carousel-btn.prev');
   var nextBtn = document.querySelector('.carousel-btn.next');
 
-  if (!track || !prevBtn || !nextBtn) return;
+  if (!track) return;
+  if (!prevBtn || !nextBtn) {
+    // Mobile: buttons might be hidden, just enable touch scrolling
+    enableTouchScroll(track);
+    return;
+  }
 
   var scrollAmount = 380; // Card width + gap
 
@@ -309,7 +314,7 @@ function initReviewsCarousel() {
   });
 
   // Auto-scroll every 5 seconds
-  var autoScroll = setInterval(function() {
+  window.reviewsAutoScroll = setInterval(function() {
     if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
       scrollToStart();
     } else {
@@ -319,11 +324,11 @@ function initReviewsCarousel() {
 
   // Pause auto-scroll on hover
   track.addEventListener('mouseenter', function() {
-    clearInterval(autoScroll);
+    clearInterval(window.reviewsAutoScroll);
   });
 
   track.addEventListener('mouseleave', function() {
-    autoScroll = setInterval(function() {
+    window.reviewsAutoScroll = setInterval(function() {
       if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
         scrollToStart();
       } else {
@@ -331,6 +336,46 @@ function initReviewsCarousel() {
       }
     }, 5000);
   });
+
+  // Enable touch scroll for all devices
+  enableTouchScroll(track);
+}
+
+/* ============================================
+   TOUCH SCROLL ENHANCEMENT FOR MOBILE
+   ============================================ */
+function enableTouchScroll(element) {
+  var startX = 0;
+  var scrollLeft = 0;
+  var isDown = false;
+  var hasMoved = false;
+
+  element.addEventListener('touchstart', function(e) {
+    isDown = true;
+    hasMoved = false;
+    startX = e.touches[0].pageX - element.offsetLeft;
+    scrollLeft = element.scrollLeft;
+  }, { passive: true });
+
+  element.addEventListener('touchmove', function(e) {
+    if (!isDown) return;
+    hasMoved = true;
+    var x = e.touches[0].pageX - element.offsetLeft;
+    var walk = (x - startX) * 2;
+    element.scrollLeft = scrollLeft - walk;
+  }, { passive: true });
+
+  element.addEventListener('touchend', function() {
+    isDown = false;
+  }, { passive: true });
+
+  // Pause auto-scroll on touch
+  element.addEventListener('touchstart', function() {
+    var autoScrollInterval = window.reviewsAutoScroll;
+    if (autoScrollInterval) {
+      clearInterval(autoScrollInterval);
+    }
+  }, { passive: true });
 }
 
 /* ============================================
