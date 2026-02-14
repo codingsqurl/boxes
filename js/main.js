@@ -263,7 +263,8 @@ function initReviewsCarousel() {
   // Safari-compatible scroll function
   function scrollTrack(amount) {
     var start = track.scrollLeft;
-    var duration = 300;
+    var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    var duration = isTouchDevice ? 800 : 300; // Slower, smoother on mobile
     var startTime = null;
 
     // Try native smooth scroll first
@@ -287,12 +288,14 @@ function initReviewsCarousel() {
   }
 
   function scrollToStart() {
+    var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    var duration = isTouchDevice ? 800 : 300; // Slower, smoother on mobile
+
     if ('scrollBehavior' in document.documentElement.style) {
       track.scrollTo({ left: 0, behavior: 'smooth' });
     } else {
       // Fallback
       var start = track.scrollLeft;
-      var duration = 300;
       var startTime = null;
       function animate(currentTime) {
         if (!startTime) startTime = currentTime;
@@ -313,16 +316,20 @@ function initReviewsCarousel() {
     scrollTrack(scrollAmount);
   });
 
-  // Auto-scroll every 5 seconds
+  // Auto-scroll with different speeds for mobile vs desktop
+  var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  var autoScrollInterval = isTouchDevice ? 8000 : 5000; // 8 seconds for mobile, 5 for desktop
+
+  // Auto-scroll
   window.reviewsAutoScroll = setInterval(function() {
     if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
       scrollToStart();
     } else {
       scrollTrack(scrollAmount);
     }
-  }, 5000);
+  }, autoScrollInterval);
 
-  // Pause auto-scroll on hover
+  // Pause auto-scroll on hover (desktop)
   track.addEventListener('mouseenter', function() {
     clearInterval(window.reviewsAutoScroll);
   });
@@ -334,8 +341,28 @@ function initReviewsCarousel() {
       } else {
         scrollTrack(scrollAmount);
       }
-    }, 5000);
+    }, autoScrollInterval);
   });
+
+  // Pause auto-scroll on touch (mobile)
+  if (isTouchDevice) {
+    track.addEventListener('touchstart', function() {
+      clearInterval(window.reviewsAutoScroll);
+    });
+
+    track.addEventListener('touchend', function() {
+      // Resume auto-scroll after 3 seconds of inactivity
+      setTimeout(function() {
+        window.reviewsAutoScroll = setInterval(function() {
+          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            scrollToStart();
+          } else {
+            scrollTrack(scrollAmount);
+          }
+        }, autoScrollInterval);
+      }, 3000);
+    });
+  }
 
   // Enable touch scroll for all devices
   enableTouchScroll(track);
@@ -367,14 +394,6 @@ function enableTouchScroll(element) {
 
   element.addEventListener('touchend', function() {
     isDown = false;
-  }, { passive: true });
-
-  // Pause auto-scroll on touch
-  element.addEventListener('touchstart', function() {
-    var autoScrollInterval = window.reviewsAutoScroll;
-    if (autoScrollInterval) {
-      clearInterval(autoScrollInterval);
-    }
   }, { passive: true });
 }
 
