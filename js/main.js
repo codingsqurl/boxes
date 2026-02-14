@@ -258,7 +258,9 @@ function initReviewsCarousel() {
     return;
   }
 
-  var scrollAmount = 380; // Card width + gap
+  // Calculate scroll amount based on card width + gap
+  var cardElement = track.querySelector('.review-card');
+  var scrollAmount = cardElement ? cardElement.offsetWidth + 40 : 540; // Card width + gap
 
   // Safari-compatible scroll function
   function scrollTrack(amount) {

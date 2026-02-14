@@ -866,12 +866,12 @@ a {
 
 .reviews-track {
   display: flex;
-  gap: 30px;
+  gap: 40px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 20px max(60px, calc((100vw - 350px) / 2));
+  padding: 20px calc((100vw - min(500px, 85vw)) / 2);
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   touch-action: pan-x;
@@ -911,8 +911,8 @@ a {
 }
 
 .review-card {
-  -webkit-flex: 0 0 350px;
-  flex: 0 0 350px;
+  -webkit-flex: 0 0 min(500px, 85vw);
+  flex: 0 0 min(500px, 85vw);
   background: rgba(255,255,255,0.05);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -920,6 +920,7 @@ a {
   padding: 30px;
   border-radius: 20px;
   scroll-snap-align: center;
+  scroll-snap-stop: always;
   -webkit-transition: var(--transition-normal);
   transition: var(--transition-normal);
 }
@@ -1415,12 +1416,12 @@ a {
   }
 
   .review-card {
-    -webkit-flex: 0 0 340px;
-    flex: 0 0 340px;
+    -webkit-flex: 0 0 min(450px, 85vw);
+    flex: 0 0 min(450px, 85vw);
   }
 
   .reviews-track {
-    padding: 20px max(30px, calc((100vw - 340px) / 2));
+    padding: 20px calc((100vw - min(450px, 85vw)) / 2);
   }
 
   .footer-grid {
@@ -1489,12 +1490,13 @@ a {
   }
 
   .review-card {
-    -webkit-flex: 0 0 320px;
-    flex: 0 0 320px;
+    -webkit-flex: 0 0 90vw;
+    flex: 0 0 90vw;
   }
 
   .reviews-track {
-    padding: 20px max(20px, calc((100vw - 320px) / 2));
+    padding: 20px calc((100vw - 90vw) / 2);
+    gap: 30px;
   }
 
   .reviews-carousel {
@@ -1539,13 +1541,13 @@ a {
   }
 
   .review-card {
-    -webkit-flex: 0 0 280px;
-    flex: 0 0 280px;
+    -webkit-flex: 0 0 92vw;
+    flex: 0 0 92vw;
   }
 
   .reviews-track {
-    gap: 20px;
-    padding: 20px max(10px, calc((100vw - 280px) / 2));
+    gap: 25px;
+    padding: 20px calc((100vw - 92vw) / 2);
   }
 
   .reviews-carousel {
