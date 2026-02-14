@@ -264,7 +264,7 @@ function initReviewsCarousel() {
   function scrollTrack(amount) {
     var start = track.scrollLeft;
     var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    var duration = isTouchDevice ? 800 : 300; // Slower, smoother on mobile
+    var duration = isTouchDevice ? 1200 : 600; // Slower, smoother on mobile
     var startTime = null;
 
     // Try native smooth scroll first
@@ -289,7 +289,7 @@ function initReviewsCarousel() {
 
   function scrollToStart() {
     var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    var duration = isTouchDevice ? 800 : 300; // Slower, smoother on mobile
+    var duration = isTouchDevice ? 1200 : 600; // Slower, smoother on mobile
 
     if ('scrollBehavior' in document.documentElement.style) {
       track.scrollTo({ left: 0, behavior: 'smooth' });
@@ -318,7 +318,7 @@ function initReviewsCarousel() {
 
   // Auto-scroll with different speeds for mobile vs desktop
   var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  var autoScrollInterval = isTouchDevice ? 8000 : 5000; // 8 seconds for mobile, 5 for desktop
+  var autoScrollInterval = isTouchDevice ? 15000 : 12000; // 15 seconds for mobile, 12 for desktop
 
   // Auto-scroll
   window.reviewsAutoScroll = setInterval(function() {
@@ -351,7 +351,7 @@ function initReviewsCarousel() {
     });
 
     track.addEventListener('touchend', function() {
-      // Resume auto-scroll after 3 seconds of inactivity
+      // Resume auto-scroll after 5 seconds of inactivity
       setTimeout(function() {
         window.reviewsAutoScroll = setInterval(function() {
           if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
@@ -360,7 +360,7 @@ function initReviewsCarousel() {
             scrollTrack(scrollAmount);
           }
         }, autoScrollInterval);
-      }, 3000);
+      }, 5000);
     });
   }
 
