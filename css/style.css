@@ -860,6 +860,8 @@ a {
   position: relative;
   padding: 0 60px;
   margin-bottom: 40px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .reviews-track {
@@ -869,7 +871,7 @@ a {
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 20px 0;
+  padding: 20px max(60px, calc((100vw - 350px) / 2));
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   touch-action: pan-x;
@@ -917,7 +919,7 @@ a {
   border: 1px solid rgba(255,255,255,0.1);
   padding: 30px;
   border-radius: 20px;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   -webkit-transition: var(--transition-normal);
   transition: var(--transition-normal);
 }
@@ -1412,6 +1414,15 @@ a {
     gap: 40px;
   }
 
+  .review-card {
+    -webkit-flex: 0 0 340px;
+    flex: 0 0 340px;
+  }
+
+  .reviews-track {
+    padding: 20px max(30px, calc((100vw - 340px) / 2));
+  }
+
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1477,8 +1488,18 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .review-card {
+    -webkit-flex: 0 0 320px;
+    flex: 0 0 320px;
+  }
+
+  .reviews-track {
+    padding: 20px max(20px, calc((100vw - 320px) / 2));
+  }
+
   .reviews-carousel {
-    padding: 0 20px;
+    padding: 0;
+    overflow: visible;
   }
 
   .carousel-btn {
@@ -1524,7 +1545,7 @@ a {
 
   .reviews-track {
     gap: 20px;
-    padding: 20px 10px;
+    padding: 20px max(10px, calc((100vw - 280px) / 2));
   }
 
   .reviews-carousel {
