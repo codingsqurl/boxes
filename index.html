@@ -3,7 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Tree Hoppers - Expert tree care services in Colorado Springs. ISA Certified Arborists providing pruning, storm damage recovery, fire mitigation, and tree removal.">
+  <meta name="description" content="Tree Hoppers - Expert tree care services in Colorado Springs. ISA - 2009 providing pruning, storm damage recovery, fire mitigation, and tree removal.">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://treehopperscos.com/">
+  <meta property="og:title" content="Tree Hoppers | Expert Tree Care - Colorado Springs">
+  <meta property="og:description" content="Expert tree care services in Colorado Springs. ISA - 2009 providing pruning, storm damage recovery, fire mitigation, and tree removal.">
+  <meta property="og:image" content="https://treehopperscos.com/pictures/hang-ten.JPG">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://treehopperscos.com/">
+  <meta property="twitter:title" content="Tree Hoppers | Expert Tree Care - Colorado Springs">
+  <meta property="twitter:description" content="Expert tree care services in Colorado Springs. ISA - 2009 providing pruning, storm damage recovery, fire mitigation, and tree removal.">
+  <meta property="twitter:image" content="https://treehopperscos.com/pictures/hang-ten.JPG">
+
   <!-- Safari/iOS specific -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -19,6 +34,40 @@
   <link rel="stylesheet" href="css/style.css">
   <!-- Google Fonts with fallback display -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Google Analytics -->
+  <!-- TODO: Replace G-XXXXXXXXXX with your actual Google Analytics 4 Measurement ID -->
+  <!-- Get your ID at https://analytics.google.com -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+
+    // Track phone number clicks
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+          gtag('event', 'phone_call', {
+            'event_category': 'Contact',
+            'event_label': link.getAttribute('href')
+          });
+        });
+      });
+
+      // Track email clicks
+      document.querySelectorAll('a[href^="mailto:"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+          gtag('event', 'email_click', {
+            'event_category': 'Contact',
+            'event_label': link.getAttribute('href')
+          });
+        });
+      });
+    });
+  </script>
+
   <title>Tree Hoppers | Expert Tree Care - Colorado Springs</title>
 </head>
 <body>
@@ -45,7 +94,7 @@
       </button>
       <ul class="nav-menu">
         <li><a href="#services" class="nav-link">Services</a></li>
-        <li><a href="#gallery" class="nav-link">Our Work</a></li>
+        <li><a href="#media" class="nav-link">Media</a></li>
         <li><a href="#about" class="nav-link">About</a></li>
         <li><a href="#reviews" class="nav-link">Reviews</a></li>
         <li><a href="#contact" class="nav-link nav-cta">Get Quote</a></li>
@@ -58,7 +107,7 @@
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-badge">ISA Certified Arborists</div>
+      <div class="hero-badge">ISA - 2009</div>
       <h1 class="hero-title">
         <span class="title-line">Expert Tree Care</span>
         <span class="title-line accent">For Colorado</span>
@@ -145,71 +194,73 @@
     </div>
   </section>
 
-  <!-- Gallery Section -->
-  <section id="gallery">
+  <!-- Media Section -->
+  <section id="media">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Portfolio</span>
-        <h2 class="section-title">Our Work</h2>
+        <h2 class="section-title">Photos & Videos</h2>
         <p class="section-subtitle">See the Tree Hoppers difference in action</p>
       </div>
       <div class="gallery-filter">
         <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="photos">Photos</button>
+        <button class="filter-btn" data-filter="videos">Videos</button>
         <button class="filter-btn" data-filter="removal">Removal</button>
         <button class="filter-btn" data-filter="pruning">Pruning</button>
         <button class="filter-btn" data-filter="equipment">Equipment</button>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item" data-category="removal">
+        <div class="gallery-item" data-category="removal" data-type="photo">
           <img src="pictures/tree-hoppin.jpg" alt="Tree removal in progress" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Professional Removal</span>
             <span class="gallery-category">Tree Removal</span>
           </div>
         </div>
-        <div class="gallery-item large" data-category="removal">
+        <div class="gallery-item large" data-category="removal" data-type="photo">
           <img src="pictures/hang-ten.JPG" alt="Arborist climbing" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Expert Climbing</span>
             <span class="gallery-category">Skilled Arborists</span>
           </div>
         </div>
-        <div class="gallery-item" data-category="pruning">
+        <div class="gallery-item" data-category="pruning" data-type="photo">
           <img src="pictures/saw-dust.JPG" alt="Tree cutting work" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Precision Cutting</span>
             <span class="gallery-category">Tree Pruning</span>
           </div>
         </div>
-        <div class="gallery-item" data-category="equipment">
+        <div class="gallery-item" data-category="equipment" data-type="photo">
           <img src="pictures/truck.JPG" alt="Tree Hoppers truck" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Our Fleet</span>
             <span class="gallery-category">Equipment</span>
           </div>
         </div>
-        <div class="gallery-item" data-category="removal">
+        <div class="gallery-item" data-category="removal" data-type="photo">
           <img src="pictures/tree-hoppin-2.jpg" alt="Tree work" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Safe Operations</span>
             <span class="gallery-category">Tree Removal</span>
           </div>
         </div>
-        <div class="gallery-item large" data-category="equipment">
+        <div class="gallery-item large" data-category="equipment" data-type="photo">
           <img src="pictures/back-of-chipper.jpg" alt="Wood chipper" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Professional Equipment</span>
             <span class="gallery-category">Wood Chipper</span>
           </div>
         </div>
-        <div class="gallery-item" data-category="pruning">
+        <div class="gallery-item" data-category="pruning" data-type="photo">
           <img src="pictures/saw-start.JPG" alt="Starting chainsaw" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Ready to Work</span>
             <span class="gallery-category">Professional Tools</span>
           </div>
         </div>
-        <div class="gallery-item" data-category="pruning">
+        <div class="gallery-item" data-category="pruning" data-type="photo">
           <img src="pictures/saw-dust-2.JPG" alt="Tree cutting" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Detailed Work</span>
@@ -225,7 +276,7 @@
     <div class="container">
       <div class="about-grid">
         <div class="about-image">
-          <img src="pictures/paul.JPG" alt="Paul Hopkins - Owner and ISA Certified Arborist">
+          <img src="pictures/paul.JPG" alt="Paul Hopkins - Owner and ISA - 2009">
           <div class="about-badge">
             <span class="badge-years">15+</span>
             <span class="badge-text">Years</span>
@@ -234,11 +285,11 @@
         <div class="about-content">
           <span class="section-tag">Meet The Owner</span>
           <h2 class="section-title">Paul Hopkins</h2>
-          <p class="about-role">ISA Certified Arborist & Founder</p>
+          <p class="about-role">ISA - 2009 & Founder</p>
           <p class="about-text">
             With over 15 years in arboriculture, I founded Tree Hoppers in 2017 with a simple mission:
-            provide honest, expert tree care that puts safety and the environment first. As an ISA
-            Certified Arborist since 2009, I bring professional knowledge and genuine passion to every job.
+            provide honest, expert tree care that puts safety and the environment first. As an ISA - 2009,
+            I bring professional knowledge and genuine passion to every job.
           </p>
           <p class="about-text">
             We're not just cutting trees – we're caring for Colorado's urban forest. From the Front Range
@@ -248,7 +299,7 @@
           <div class="about-features">
             <div class="feature">
               <span class="feature-icon">✓</span>
-              <span>ISA Certified</span>
+              <span>ISA - 2009</span>
             </div>
             <div class="feature">
               <span class="feature-icon">✓</span>
@@ -380,9 +431,6 @@
             <a href="https://www.facebook.com/treehopperscos/" target="_blank" class="social-link" aria-label="Facebook">
               <img src="icons/facebook-messenger-brands-solid-full.svg" alt="Facebook">
             </a>
-            <a href="https://www.instagram.com/treehopperscos/" target="_blank" class="social-link" aria-label="Instagram">
-              <img src="icons/instagram-brands-solid-full.svg" alt="Instagram">
-            </a>
             <a href="https://www.yelp.com/biz/tree-hoppers-colorado-springs" target="_blank" class="social-link" aria-label="Yelp">
               <img src="icons/yelp-brands-solid-full.svg" alt="Yelp">
             </a>
@@ -402,7 +450,7 @@
           </div>
           <div class="form-group">
             <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" placeholder="(719) 000-0000" required>
+            <input type="tel" id="phone" name="phone" required>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
@@ -423,12 +471,12 @@
             </div>
             <div class="form-group">
               <label for="city">City</label>
-              <input type="text" id="city" name="city" placeholder="Colorado Springs" required>
+              <input type="text" id="city" name="city" required>
             </div>
           </div>
           <div class="form-group">
             <label for="message">Tell Us About Your Trees</label>
-            <textarea id="message" name="message" rows="4" placeholder="Describe your project or any concerns..."></textarea>
+            <textarea id="message" name="message" rows="4"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">
             <span class="btn-text">Request Free Quote</span>
@@ -451,9 +499,6 @@
             <a href="https://www.facebook.com/treehopperscos/" target="_blank" aria-label="Facebook">
               <img src="icons/facebook-messenger-brands-solid-full.svg" alt="Facebook">
             </a>
-            <a href="https://www.instagram.com/treehopperscos/" target="_blank" aria-label="Instagram">
-              <img src="icons/instagram-brands-solid-full.svg" alt="Instagram">
-            </a>
             <a href="https://www.yelp.com/biz/tree-hoppers-colorado-springs" target="_blank" aria-label="Yelp">
               <img src="icons/yelp-brands-solid-full.svg" alt="Yelp">
             </a>
@@ -472,7 +517,7 @@
           <h4>Company</h4>
           <ul>
             <li><a href="#about">About Us</a></li>
-            <li><a href="#gallery">Our Work</a></li>
+            <li><a href="#media">Media</a></li>
             <li><a href="#reviews">Reviews</a></li>
             <li><a href="#service-area">Service Area</a></li>
           </ul>
@@ -486,7 +531,7 @@
       </div>
       <div class="footer-bottom">
         <p>&copy; 2024 Tree Hoppers. All rights reserved.</p>
-        <p>ISA Certified • Fully Insured • Locally Owned</p>
+        <p>ISA - 2009 • Fully Insured • Locally Owned</p>
       </div>
     </div>
   </footer>

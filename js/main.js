@@ -214,7 +214,7 @@ function initCounterAnimation() {
 }
 
 /* ============================================
-   GALLERY FILTER
+   MEDIA FILTER (Photos & Videos)
    ============================================ */
 function initGalleryFilter() {
   const filterBtns = document.querySelectorAll('.filter-btn');
@@ -231,8 +231,20 @@ function initGalleryFilter() {
       // Filter items with animation
       galleryItems.forEach(item => {
         const category = item.getAttribute('data-category');
+        const type = item.getAttribute('data-type');
+        let shouldShow = false;
 
-        if (filter === 'all' || category === filter) {
+        // Determine if item should be shown
+        if (filter === 'all') {
+          shouldShow = true;
+        } else if (filter === 'photos' || filter === 'videos') {
+          shouldShow = type === filter.slice(0, -1); // Remove 's' from 'photos'/'videos'
+        } else {
+          shouldShow = category === filter;
+        }
+
+        // Show or hide with animation
+        if (shouldShow) {
           item.classList.remove('hidden');
           item.style.animation = 'fadeInUp 0.5s ease forwards';
         } else {
@@ -262,20 +274,14 @@ function initReviewsCarousel() {
   var cardElement = track.querySelector('.review-card');
   var scrollAmount = cardElement ? cardElement.offsetWidth + 40 : 540; // Card width + gap
 
-  // Safari-compatible scroll function
+  // Smooth scroll function with custom animation
   function scrollTrack(amount) {
     var start = track.scrollLeft;
     var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     var duration = isTouchDevice ? 1200 : 600; // Slower, smoother on mobile
     var startTime = null;
 
-    // Try native smooth scroll first
-    if ('scrollBehavior' in document.documentElement.style) {
-      track.scrollBy({ left: amount, behavior: 'smooth' });
-      return;
-    }
-
-    // Fallback animation for Safari
+    // Custom animation for better control and compatibility
     function animate(currentTime) {
       if (!startTime) startTime = currentTime;
       var elapsed = currentTime - startTime;
@@ -292,22 +298,19 @@ function initReviewsCarousel() {
   function scrollToStart() {
     var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     var duration = isTouchDevice ? 1200 : 600; // Slower, smoother on mobile
+    var start = track.scrollLeft;
+    var startTime = null;
 
-    if ('scrollBehavior' in document.documentElement.style) {
-      track.scrollTo({ left: 0, behavior: 'smooth' });
-    } else {
-      // Fallback
-      var start = track.scrollLeft;
-      var startTime = null;
-      function animate(currentTime) {
-        if (!startTime) startTime = currentTime;
-        var elapsed = currentTime - startTime;
-        var progress = Math.min(elapsed / duration, 1);
-        track.scrollLeft = start * (1 - progress);
-        if (elapsed < duration) requestAnimationFrame(animate);
-      }
-      requestAnimationFrame(animate);
+    // Custom animation to scroll back to start
+    function animate(currentTime) {
+      if (!startTime) startTime = currentTime;
+      var elapsed = currentTime - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      var easing = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      track.scrollLeft = start * (1 - easing);
+      if (elapsed < duration) requestAnimationFrame(animate);
     }
+    requestAnimationFrame(animate);
   }
 
   prevBtn.addEventListener('click', function() {
@@ -607,38 +610,146 @@ function initContactForm() {
 
   if (!form) return;
 
+  // Add real-time validation
+  const inputs = form.querySelectorAll('input, select, textarea');
+  inputs.forEach(input => {
+    input.addEventListener('blur', () => validateField(input));
+    input.addEventListener('input', () => {
+      if (input.classList.contains('error')) {
+        validateField(input);
+      }
+    });
+  });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Validate all fields
+    let isValid = true;
+    inputs.forEach(input => {
+      if (!validateField(input)) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      showNotification('Please fix the errors in the form.', 'error');
+      return;
+    }
+
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
 
     // Collect form data
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
 
-    // Simulate form submission
-    // In production, you'd send this to your server or a service like Formspree
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // TODO: Replace with your Formspree endpoint
+      // Get your free endpoint at https://formspree.io
+      const FORMSPREE_ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT'; // e.g., 'https://formspree.io/f/xyzabc123'
 
-    submitBtn.classList.remove('loading');
+      let response;
+      if (FORMSPREE_ENDPOINT !== 'YOUR_FORMSPREE_ENDPOINT') {
+        // Send to Formspree
+        response = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
 
-    // Show success message
-    showNotification('Thank you! We\'ll contact you within 24 hours.', 'success');
+        if (!response.ok) {
+          throw new Error('Form submission failed');
+        }
+      } else {
+        // Fallback: simulate submission for demo
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        console.log('Form data (demo mode):', Object.fromEntries(formData.entries()));
+        console.warn('⚠️ Formspree not configured. Update FORMSPREE_ENDPOINT in main.js');
+      }
 
-    // Reset form
-    form.reset();
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
 
-    // Log data (for development)
-    console.log('Form submitted:', data);
+      // Show success message
+      showNotification('Thank you! We\'ll contact you within 24 hours.', 'success');
 
-    // Example: Send to Formspree (free form backend)
-    // await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-    //   method: 'POST',
-    //   body: formData,
-    //   headers: { 'Accept': 'application/json' }
-    // });
+      // Reset form
+      form.reset();
+      inputs.forEach(input => {
+        input.classList.remove('success', 'error');
+        removeFieldError(input);
+      });
+
+    } catch (error) {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      console.error('Form submission error:', error);
+      showNotification('Oops! Something went wrong. Please try calling us directly.', 'error');
+    }
   });
+}
+
+// Field validation function
+function validateField(field) {
+  const value = field.value.trim();
+  const type = field.type;
+  const required = field.hasAttribute('required');
+
+  // Remove previous error
+  removeFieldError(field);
+  field.classList.remove('error', 'success');
+
+  if (required && !value) {
+    showFieldError(field, 'This field is required');
+    return false;
+  }
+
+  if (value) {
+    // Email validation
+    if (type === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        showFieldError(field, 'Please enter a valid email address');
+        return false;
+      }
+    }
+
+    // Phone validation
+    if (type === 'tel') {
+      const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+      const digitsOnly = value.replace(/\D/g, '');
+      if (digitsOnly.length !== 10) {
+        showFieldError(field, 'Please enter a valid 10-digit phone number');
+        return false;
+      }
+    }
+
+    field.classList.add('success');
+  }
+
+  return true;
+}
+
+// Show field error
+function showFieldError(field, message) {
+  field.classList.add('error');
+
+  // Remove existing error message
+  const existingError = field.parentNode.querySelector('.field-error');
+  if (existingError) existingError.remove();
+
+  // Add error message
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'field-error';
+  errorDiv.textContent = message;
+  field.parentNode.appendChild(errorDiv);
+}
+
+// Remove field error
+function removeFieldError(field) {
+  const errorDiv = field.parentNode.querySelector('.field-error');
+  if (errorDiv) errorDiv.remove();
 }
 
 /* ============================================
@@ -657,13 +768,21 @@ function showNotification(message, type = 'info') {
   `;
 
   // Add styles dynamically
+  const colors = {
+    success: { bg: '#9dc334', text: '#041e1f' },
+    error: { bg: '#e53e3e', text: '#fff' },
+    info: { bg: '#e48705', text: '#fff' }
+  };
+
+  const color = colors[type] || colors.info;
+
   notification.style.cssText = `
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: ${type === 'success' ? '#9dc334' : '#e48705'};
-    color: ${type === 'success' ? '#041e1f' : '#fff'};
+    background: ${color.bg};
+    color: ${color.text};
     padding: 15px 25px;
     border-radius: 10px;
     display: flex;
@@ -673,6 +792,7 @@ function showNotification(message, type = 'info') {
     z-index: 10000;
     font-weight: 500;
     animation: slideUp 0.5s ease forwards;
+    max-width: 90%;
   `;
 
   // Add animation keyframes
@@ -740,3 +860,52 @@ function initParallax() {
 
 // Initialize parallax
 initParallax();
+
+/* ============================================
+   LAZY LOADING IMAGES
+   ============================================ */
+function initLazyLoading() {
+  const images = document.querySelectorAll('img[loading="lazy"]');
+
+  // Check if browser supports native lazy loading
+  if ('loading' in HTMLImageElement.prototype) {
+    // Browser supports native lazy loading, nothing more needed
+    return;
+  }
+
+  // Fallback: Use Intersection Observer for older browsers
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          img.classList.add('loaded');
+          observer.unobserve(img);
+        }
+      });
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.01
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+  } else {
+    // Fallback for very old browsers - load all images immediately
+    images.forEach(img => {
+      if (img.dataset.src) {
+        img.src = img.dataset.src;
+      }
+    });
+  }
+}
+
+// Initialize lazy loading when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLazyLoading);
+} else {
+  initLazyLoading();
+}
