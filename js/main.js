@@ -761,20 +761,7 @@ if (document.readyState === 'loading') {
 
 /* EMERGENCY BANNER */
 function initEmergencyBanner() {
-  const banner = document.getElementById('emergency-banner');
-  const closeBtn = banner.querySelector('.banner-close');
-
-  if (sessionStorage.getItem('emergencyBannerClosed')) {
-    banner.classList.add('hidden');
-  }
-
-  closeBtn.addEventListener('click', () => {
-    banner.style.animation = 'slideDown 0.3s ease reverse';
-    setTimeout(() => {
-      banner.classList.add('hidden');
-      sessionStorage.setItem('emergencyBannerClosed', 'true');
-    }, 300);
-  });
+  // Emergency banner is always visible, no close functionality needed
 }
 
 /* COST CALCULATOR */

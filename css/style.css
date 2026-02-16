@@ -93,10 +93,6 @@ a {
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-.emergency-banner.hidden {
-  display: none;
-}
-
 .emergency-content {
   max-width: var(--container-width);
   margin: 0 auto;
@@ -141,22 +137,6 @@ a {
 .emergency-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(255,255,255,0.3);
-}
-
-.banner-close {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 0 10px;
-  line-height: 1;
-  opacity: 0.8;
-  transition: opacity 0.2s;
-}
-
-.banner-close:hover {
-  opacity: 1;
 }
 
 /* LOADER */
@@ -223,7 +203,7 @@ a {
 /* NAVIGATION */
 #navbar {
   position: fixed;
-  top: 0;
+  top: 56px;
   left: 0;
   width: 100%;
   z-index: 1000;
