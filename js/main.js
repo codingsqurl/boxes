@@ -1,50 +1,3 @@
-/* ============================================
-   TREE HOPPERS - Main JavaScript
-   Cross-browser compatible (Safari, Chrome, Firefox, DuckDuckGo, Edge)
-   ============================================ */
-
-// Polyfill for smooth scroll (Safari < 15.4)
-(function() {
-  if (!('scrollBehavior' in document.documentElement.style)) {
-    var script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js';
-    script.onload = function() {
-      if (typeof window.__forceSmoothScrollPolyfill__ !== 'undefined') {
-        window.__forceSmoothScrollPolyfill__ = true;
-      }
-    };
-    document.head.appendChild(script);
-  }
-})();
-
-// Polyfill for Object.fromEntries (older browsers)
-if (!Object.fromEntries) {
-  Object.fromEntries = function(entries) {
-    var obj = {};
-    entries.forEach(function(entry) {
-      obj[entry[0]] = entry[1];
-    });
-    return obj;
-  };
-}
-
-// Polyfill for Element.closest (IE11)
-if (!Element.prototype.closest) {
-  Element.prototype.closest = function(s) {
-    var el = this;
-    do {
-      if (el.matches(s)) return el;
-      el = el.parentElement || el.parentNode;
-    } while (el !== null && el.nodeType === 1);
-    return null;
-  };
-}
-
-// Polyfill for Element.matches
-if (!Element.prototype.matches) {
-  Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all modules
   initLoader();
@@ -59,9 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loadReviews();
 });
 
-/* ============================================
-   PAGE LOADER
-   ============================================ */
+/* PAGE LOADER */
 function initLoader() {
   const loader = document.getElementById('loader');
 
@@ -79,9 +30,7 @@ function initLoader() {
   }, 3000);
 }
 
-/* ============================================
-   NAVBAR SCROLL EFFECT
-   ============================================ */
+/* NAVBAR */
 function initNavbar() {
   var navbar = document.getElementById('navbar');
 
@@ -114,42 +63,12 @@ function initNavbar() {
   }
 }
 
-// Custom smooth scroll function for Safari compatibility
 function smoothScrollTo(target) {
   var targetPosition = target.getBoundingClientRect().top + window.pageYOffset - 80;
-  var startPosition = window.pageYOffset;
-  var distance = targetPosition - startPosition;
-  var duration = 800;
-  var start = null;
-
-  // Check if browser supports smooth scroll natively
-  if ('scrollBehavior' in document.documentElement.style) {
-    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-    return;
-  }
-
-  // Fallback animation for Safari
-  function animation(currentTime) {
-    if (start === null) start = currentTime;
-    var timeElapsed = currentTime - start;
-    var progress = Math.min(timeElapsed / duration, 1);
-    var easing = easeInOutCubic(progress);
-    window.scrollTo(0, startPosition + distance * easing);
-    if (timeElapsed < duration) {
-      requestAnimationFrame(animation);
-    }
-  }
-
-  function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
-  requestAnimationFrame(animation);
+  window.scrollTo({ top: targetPosition, behavior: 'smooth' });
 }
 
-/* ============================================
-   MOBILE MENU
-   ============================================ */
+/* MOBILE MENU */
 function initMobileMenu() {
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('.nav-menu');
@@ -168,9 +87,7 @@ function initMobileMenu() {
   });
 }
 
-/* ============================================
-   COUNTER ANIMATION
-   ============================================ */
+/* COUNTER ANIMATION */
 function initCounterAnimation() {
   const counters = document.querySelectorAll('.stat-number');
   let animated = false;
@@ -213,9 +130,7 @@ function initCounterAnimation() {
   }
 }
 
-/* ============================================
-   MEDIA FILTER (Photos & Videos)
-   ============================================ */
+/* MEDIA FILTER */
 function initGalleryFilter() {
   const filterBtns = document.querySelectorAll('.filter-btn');
   const galleryItems = document.querySelectorAll('.gallery-item');
@@ -255,9 +170,7 @@ function initGalleryFilter() {
   });
 }
 
-/* ============================================
-   REVIEWS CAROUSEL
-   ============================================ */
+/* REVIEWS CAROUSEL */
 function initReviewsCarousel() {
   var track = document.querySelector('.reviews-track');
   var prevBtn = document.querySelector('.carousel-btn.prev');
@@ -378,25 +291,20 @@ function initReviewsCarousel() {
   enableTouchScroll(track);
 }
 
-/* ============================================
-   TOUCH SCROLL ENHANCEMENT FOR MOBILE
-   ============================================ */
+/* TOUCH SCROLL */
 function enableTouchScroll(element) {
   var startX = 0;
   var scrollLeft = 0;
   var isDown = false;
-  var hasMoved = false;
 
   element.addEventListener('touchstart', function(e) {
     isDown = true;
-    hasMoved = false;
     startX = e.touches[0].pageX - element.offsetLeft;
     scrollLeft = element.scrollLeft;
   }, { passive: true });
 
   element.addEventListener('touchmove', function(e) {
     if (!isDown) return;
-    hasMoved = true;
     var x = e.touches[0].pageX - element.offsetLeft;
     var walk = (x - startX) * 2;
     element.scrollLeft = scrollLeft - walk;
@@ -407,18 +315,10 @@ function enableTouchScroll(element) {
   }, { passive: true });
 }
 
-/* ============================================
-   LOAD REVIEWS (Dynamic)
-   ============================================ */
+/* LOAD REVIEWS */
 async function loadReviews() {
   const container = document.getElementById('reviews-container');
   const reviewCount = document.getElementById('review-count');
-
-  // Simulated reviews data - In production, this would fetch from Google Places API or Yelp API
-  // To use real Google reviews, you'd need:
-  // 1. Google Places API key
-  // 2. Place ID for Tree Hoppers
-  // 3. Fetch from: https://maps.googleapis.com/maps/api/place/details/json?place_id=YOUR_PLACE_ID&fields=reviews&key=YOUR_API_KEY
 
   const reviews = [
     {
@@ -527,41 +427,7 @@ function createReviewCard(review) {
   return card;
 }
 
-/* ============================================
-   FETCH REAL GOOGLE REVIEWS (Template)
-   ============================================ */
-// Uncomment and configure this function to fetch real Google reviews
-// You'll need a Google Places API key and the Place ID for Tree Hoppers
-
-/*
-async function fetchGoogleReviews() {
-  const GOOGLE_API_KEY = 'YOUR_GOOGLE_API_KEY';
-  const PLACE_ID = 'YOUR_PLACE_ID'; // Find this on Google Maps
-
-  try {
-    // Note: This needs to be done through a backend server due to CORS
-    // You'd create a simple API endpoint that fetches and returns the data
-    const response = await fetch(`/api/reviews?place_id=${PLACE_ID}`);
-    const data = await response.json();
-
-    return data.result.reviews.map(review => ({
-      author: review.author_name,
-      avatar: review.author_name.split(' ').map(n => n[0]).join(''),
-      rating: review.rating,
-      text: review.text,
-      date: review.relative_time_description,
-      source: 'Google'
-    }));
-  } catch (error) {
-    console.error('Error fetching reviews:', error);
-    return [];
-  }
-}
-*/
-
-/* ============================================
-   BACK TO TOP BUTTON
-   ============================================ */
+/* BACK TO TOP */
 function initBackToTop() {
   const backToTop = document.getElementById('back-to-top');
 
@@ -578,9 +444,7 @@ function initBackToTop() {
   });
 }
 
-/* ============================================
-   SCROLL ANIMATIONS
-   ============================================ */
+/* SCROLL ANIMATIONS */
 function initScrollAnimations() {
   const animatedElements = document.querySelectorAll('.service-card, .gallery-item, .about-image, .about-content');
 
@@ -602,9 +466,7 @@ function initScrollAnimations() {
   });
 }
 
-/* ============================================
-   CONTACT FORM
-   ============================================ */
+/* CONTACT FORM */
 function initContactForm() {
   const form = document.getElementById('contact-form');
 
@@ -645,27 +507,20 @@ function initContactForm() {
     const formData = new FormData(form);
 
     try {
-      // TODO: Replace with your Formspree endpoint
-      // Get your free endpoint at https://formspree.io
-      const FORMSPREE_ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT'; // e.g., 'https://formspree.io/f/xyzabc123'
+      const FORMSPREE_ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT';
 
-      let response;
       if (FORMSPREE_ENDPOINT !== 'YOUR_FORMSPREE_ENDPOINT') {
-        // Send to Formspree
-        response = await fetch(FORMSPREE_ENDPOINT, {
+        const response = await fetch(FORMSPREE_ENDPOINT, {
           method: 'POST',
           body: formData,
           headers: { 'Accept': 'application/json' }
         });
 
-        if (!response.ok) {
-          throw new Error('Form submission failed');
-        }
+        if (!response.ok) throw new Error('Form submission failed');
       } else {
-        // Fallback: simulate submission for demo
         await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Form data (demo mode):', Object.fromEntries(formData.entries()));
-        console.warn('⚠️ Formspree not configured. Update FORMSPREE_ENDPOINT in main.js');
+        console.log('Demo mode:', Object.fromEntries(formData.entries()));
+        console.warn('Configure FORMSPREE_ENDPOINT in main.js');
       }
 
       submitBtn.classList.remove('loading');
@@ -717,7 +572,6 @@ function validateField(field) {
 
     // Phone validation
     if (type === 'tel') {
-      const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
       const digitsOnly = value.replace(/\D/g, '');
       if (digitsOnly.length !== 10) {
         showFieldError(field, 'Please enter a valid 10-digit phone number');
@@ -752,9 +606,7 @@ function removeFieldError(field) {
   if (errorDiv) errorDiv.remove();
 }
 
-/* ============================================
-   NOTIFICATION SYSTEM
-   ============================================ */
+/* NOTIFICATIONS */
 function showNotification(message, type = 'info') {
   // Remove existing notifications
   const existing = document.querySelector('.notification');
@@ -821,9 +673,7 @@ function showNotification(message, type = 'info') {
   }, 5000);
 }
 
-/* ============================================
-   PHONE NUMBER FORMATTING
-   ============================================ */
+/* PHONE FORMATTING */
 document.addEventListener('DOMContentLoaded', () => {
   const phoneInput = document.getElementById('phone');
 
@@ -844,9 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* ============================================
-   PARALLAX EFFECT (Optional Enhancement)
-   ============================================ */
+/* PARALLAX */
 function initParallax() {
   const heroBg = document.querySelector('.hero-bg');
 
@@ -861,9 +709,7 @@ function initParallax() {
 // Initialize parallax
 initParallax();
 
-/* ============================================
-   LAZY LOADING IMAGES
-   ============================================ */
+/* LAZY LOADING */
 function initLazyLoading() {
   const images = document.querySelectorAll('img[loading="lazy"]');
 
