@@ -83,7 +83,7 @@ a {
 
 /* EMERGENCY BANNER */
 .emergency-banner {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -91,16 +91,6 @@ a {
   color: white;
   z-index: 10000;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  animation: slideDown 0.5s ease;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
 }
 
 .emergency-banner.hidden {
