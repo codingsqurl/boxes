@@ -36,8 +36,55 @@
   </script>
 
   <title>Tree Hoppers | Expert Tree Care - Colorado Springs</title>
+
+  <!-- Schema.org structured data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Tree Hoppers",
+    "image": "https://treehopperscos.com/pictures/hang-ten.JPG",
+    "description": "Expert tree care services in Colorado Springs. ISA certified arborist providing tree pruning, removal, fire mitigation, and storm damage recovery since 2017.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Colorado Springs",
+      "addressRegion": "CO",
+      "addressCountry": "US"
+    },
+    "telephone": "+17192878836",
+    "email": "treehopperscos@gmail.com",
+    "url": "https://treehopperscos.com",
+    "priceRange": "$$",
+    "openingHours": "Mo-Su 07:00-19:00",
+    "areaServed": ["Colorado Springs", "Woodland Park", "Monument", "Castle Rock", "Fountain", "Falcon", "Pueblo", "Manitou Springs"],
+    "founder": {
+      "@type": "Person",
+      "name": "Paul Hopkins",
+      "jobTitle": "ISA Certified Arborist"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "8"
+    },
+    "sameAs": [
+      "https://www.facebook.com/treehopperscos/",
+      "https://www.yelp.com/biz/tree-hoppers-colorado-springs"
+    ]
+  }
+  </script>
 </head>
 <body>
+  <!-- Emergency Service Banner -->
+  <div id="emergency-banner" class="emergency-banner">
+    <div class="emergency-content">
+      <span class="emergency-icon">🚨</span>
+      <span class="emergency-text">24/7 Emergency Tree Services Available</span>
+      <a href="tel:7192878836" class="emergency-btn">Call Now: (719) 287-8836</a>
+      <button class="banner-close" aria-label="Close banner">&times;</button>
+    </div>
+  </div>
+
   <!-- Loader -->
   <div id="loader">
     <div class="loader-content">
@@ -338,6 +385,135 @@
     </div>
   </section>
 
+  <!-- Cost Calculator -->
+  <section id="cost-calculator">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Estimate</span>
+        <h2 class="section-title">Quick Cost Calculator</h2>
+        <p class="section-subtitle">Get an instant estimate for your tree service needs</p>
+      </div>
+      <div class="calculator-container">
+        <div class="calculator-form">
+          <div class="calc-group">
+            <label for="tree-height">Tree Height</label>
+            <select id="tree-height" class="calc-input">
+              <option value="">Select height</option>
+              <option value="200">Under 15 feet</option>
+              <option value="350">15-30 feet</option>
+              <option value="600">30-50 feet</option>
+              <option value="1000">50-80 feet</option>
+              <option value="1500">Over 80 feet</option>
+            </select>
+          </div>
+          <div class="calc-group">
+            <label for="service-type">Service Type</label>
+            <select id="service-type" class="calc-input">
+              <option value="">Select service</option>
+              <option value="0.5">Pruning/Trimming</option>
+              <option value="1">Complete Removal</option>
+              <option value="0.7">Storm Damage Cleanup</option>
+              <option value="0.6">Fire Mitigation</option>
+            </select>
+          </div>
+          <div class="calc-group">
+            <label for="tree-condition">Condition</label>
+            <select id="tree-condition" class="calc-input">
+              <option value="">Select condition</option>
+              <option value="1">Healthy</option>
+              <option value="1.2">Dead/Dying</option>
+              <option value="1.3">Hazardous/Emergency</option>
+            </select>
+          </div>
+          <div class="calc-group">
+            <label for="accessibility">Accessibility</label>
+            <select id="accessibility" class="calc-input">
+              <option value="">Select accessibility</option>
+              <option value="1">Easy access</option>
+              <option value="1.2">Moderate access</option>
+              <option value="1.5">Difficult access</option>
+            </select>
+          </div>
+        </div>
+        <div class="calculator-result">
+          <div class="result-display">
+            <div class="result-label">Estimated Cost Range</div>
+            <div class="result-amount" id="cost-result">$0 - $0</div>
+            <div class="result-note">*This is an estimate. Actual cost determined after free inspection.</div>
+          </div>
+          <a href="#contact" class="btn btn-primary">Get Accurate Quote</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Questions</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know about our tree services</p>
+      </div>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How much does tree removal cost?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Tree removal costs vary based on size, location, and complexity. Small trees (under 15ft) typically range from $200-$500, while larger trees (50-80ft) can range from $1,000-$2,000+. We provide free estimates for all projects.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Do you offer emergency tree services?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! We provide 24/7 emergency tree services for storm damage, fallen trees, and hazardous situations. Call us immediately at (719) 287-8836 for urgent assistance.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Are you licensed and insured?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Absolutely. Tree Hoppers is fully licensed and insured with comprehensive liability and workers' compensation coverage. Our owner, Paul Hopkins, is an ISA Certified Arborist with over 15 years of experience.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>What's included in tree pruning service?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Our pruning service includes crown thinning, deadwood removal, shaping, and complete cleanup. We use proper ISA techniques to promote tree health while improving appearance and safety.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How long does tree removal take?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Most tree removals take 2-8 hours depending on size and complexity. Small trees may take just a few hours, while large or difficult trees requiring crane work can take a full day or more.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Do you provide stump grinding?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes, we offer professional stump grinding services. We can grind stumps 6-12 inches below ground level, allowing you to replant grass or landscaping in that area.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Service Area Map -->
   <section id="service-area">
     <div class="container">
@@ -448,6 +624,56 @@
           </button>
           <p class="form-note">We typically respond within 24 hours</p>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Badges -->
+  <section id="trust-badges">
+    <div class="container">
+      <div class="badges-grid">
+        <div class="badge-item">
+          <div class="badge-icon">✓</div>
+          <div class="badge-text">
+            <strong>ISA Certified</strong>
+            <span>Since 2009</span>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon">🛡️</div>
+          <div class="badge-text">
+            <strong>Fully Insured</strong>
+            <span>Liability & Workers Comp</span>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon">⭐</div>
+          <div class="badge-text">
+            <strong>5.0 Star Rating</strong>
+            <span>Verified Reviews</span>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon">🚨</div>
+          <div class="badge-text">
+            <strong>24/7 Emergency</strong>
+            <span>Always Available</span>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon">💰</div>
+          <div class="badge-text">
+            <strong>Free Estimates</strong>
+            <span>No Obligation</span>
+          </div>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon">🏆</div>
+          <div class="badge-text">
+            <strong>15+ Years</strong>
+            <span>Experience</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>

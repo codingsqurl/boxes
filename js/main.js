@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all modules
+  initEmergencyBanner();
   initLoader();
   initNavbar();
   initMobileMenu();
@@ -9,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
   initBackToTop();
   initScrollAnimations();
   initContactForm();
+  initCostCalculator();
+  initFAQ();
   loadReviews();
 });
 
@@ -754,4 +757,77 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initLazyLoading);
 } else {
   initLazyLoading();
+}
+
+/* EMERGENCY BANNER */
+function initEmergencyBanner() {
+  const banner = document.getElementById('emergency-banner');
+  const closeBtn = banner.querySelector('.banner-close');
+
+  if (sessionStorage.getItem('emergencyBannerClosed')) {
+    banner.classList.add('hidden');
+  }
+
+  closeBtn.addEventListener('click', () => {
+    banner.style.animation = 'slideDown 0.3s ease reverse';
+    setTimeout(() => {
+      banner.classList.add('hidden');
+      sessionStorage.setItem('emergencyBannerClosed', 'true');
+    }, 300);
+  });
+}
+
+/* COST CALCULATOR */
+function initCostCalculator() {
+  const heightSelect = document.getElementById('tree-height');
+  const serviceSelect = document.getElementById('service-type');
+  const conditionSelect = document.getElementById('tree-condition');
+  const accessibilitySelect = document.getElementById('accessibility');
+  const resultDisplay = document.getElementById('cost-result');
+
+  function calculateCost() {
+    const height = parseFloat(heightSelect.value) || 0;
+    const service = parseFloat(serviceSelect.value) || 0;
+    const condition = parseFloat(conditionSelect.value) || 0;
+    const accessibility = parseFloat(accessibilitySelect.value) || 0;
+
+    if (height && service && condition && accessibility) {
+      const baseCost = height * service * condition * accessibility;
+      const minCost = Math.round(baseCost * 0.8);
+      const maxCost = Math.round(baseCost * 1.2);
+
+      resultDisplay.textContent = `$${minCost.toLocaleString()} - $${maxCost.toLocaleString()}`;
+      resultDisplay.style.animation = 'none';
+      setTimeout(() => {
+        resultDisplay.style.animation = 'countUp 0.5s ease';
+      }, 10);
+    } else {
+      resultDisplay.textContent = '$0 - $0';
+    }
+  }
+
+  [heightSelect, serviceSelect, conditionSelect, accessibilitySelect].forEach(select => {
+    select.addEventListener('change', calculateCost);
+  });
+}
+
+/* FAQ ACCORDION */
+function initFAQ() {
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+
+    question.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+
+      faqItems.forEach(otherItem => {
+        otherItem.classList.remove('active');
+      });
+
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    });
+  });
 }
