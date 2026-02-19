@@ -1090,7 +1090,7 @@ a {
 
 /* FAQ */
 #faq {
-  background: var(--gray-900);
+  background: var(--white);
 }
 
 .faq-grid {
@@ -1101,8 +1101,8 @@ a {
 }
 
 .faq-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--pure-white);
+  border: 1px solid var(--gray-200);
   border-radius: 15px;
   overflow: hidden;
   transition: var(--transition-normal);
@@ -1126,18 +1126,18 @@ a {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 1.1rem;
-  color: var(--white);
+  color: var(--dark);
   text-align: left;
   transition: var(--transition-fast);
 }
 
 .faq-question:hover {
-  color: var(--primary);
+  color: var(--secondary);
 }
 
 .faq-icon {
   font-size: 1.5rem;
-  color: var(--primary);
+  color: var(--secondary);
   transition: transform 0.3s ease;
 }
 
@@ -1157,21 +1157,21 @@ a {
 }
 
 .faq-answer p {
-  color: #c8cee0;
+  color: var(--gray-600);
   line-height: 1.7;
 }
 
 #faq .section-title {
-  color: var(--white);
+  color: var(--dark);
 }
 
 #faq .section-subtitle {
-  color: #b0b8d0;
+  color: var(--gray-600);
 }
 
 /* TRUST BADGES */
 #trust-badges {
-  background: var(--dark);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   padding: 60px 0;
 }
 
@@ -1189,15 +1189,15 @@ a {
   gap: 10px;
   text-align: center;
   padding: 20px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.15);
   border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
   transition: var(--transition-normal);
 }
 
 .badge-item:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: var(--primary);
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
   transform: translateY(-5px);
 }
 
@@ -1212,19 +1212,19 @@ a {
 }
 
 .badge-text strong {
-  color: white;
+  color: var(--dark);
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .badge-text span {
-  color: var(--gray-400);
+  color: rgba(4, 30, 31, 0.7);
   font-size: 0.75rem;
 }
 
 /* SERVICE AREA */
 #service-area {
-  background: var(--white);
+  background: linear-gradient(180deg, var(--white), rgba(157, 195, 52, 0.08));
 }
 
 .map-content {
@@ -1274,7 +1274,19 @@ a {
 
 /* CONTACT */
 #contact {
-  background: linear-gradient(180deg, var(--white), var(--gray-200));
+  background: linear-gradient(135deg, var(--dark), var(--dark-light));
+  color: var(--white);
+}
+
+#contact .section-tag {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#contact .section-title {
+  color: var(--white);
 }
 
 .contact-grid {
@@ -1285,7 +1297,7 @@ a {
 }
 
 .contact-text {
-  color: var(--gray-600);
+  color: var(--gray-400);
   margin-bottom: 30px;
 }
 
@@ -1301,15 +1313,17 @@ a {
   align-items: center;
   gap: 20px;
   padding: 20px;
-  background: var(--pure-white);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 15px;
-  box-shadow: var(--shadow-sm);
   transition: var(--transition-normal);
+  color: var(--white);
 }
 
 .contact-method:hover {
   transform: translateX(10px);
-  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+  background: rgba(255,255,255,0.08);
 }
 
 .method-icon {
@@ -1319,13 +1333,14 @@ a {
 .method-label {
   display: block;
   font-size: 0.85rem;
-  color: var(--gray-600);
+  color: var(--gray-400);
 }
 
 .method-value {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 1.1rem;
+  color: var(--white);
 }
 
 .social-links {
@@ -1336,7 +1351,8 @@ a {
 .social-link {
   width: 50px;
   height: 50px;
-  background: var(--dark);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1346,6 +1362,7 @@ a {
 
 .social-link:hover {
   background: var(--primary);
+  border-color: var(--primary);
   transform: translateY(-5px);
 }
 
@@ -1364,7 +1381,7 @@ a {
   background: var(--pure-white);
   padding: 40px;
   border-radius: 20px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 
 .form-row {
@@ -1443,6 +1460,10 @@ a {
   color: var(--gray-600);
   font-size: 0.9rem;
   margin-top: 15px;
+}
+
+#contact .form-note {
+  color: var(--gray-600);
 }
 
 /* Button Loading State */
