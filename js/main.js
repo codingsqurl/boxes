@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all modules
-  initEmergencyBanner();
   initLoader();
   initNavbar();
   initMobileMenu();
   initCounterAnimation();
   initGalleryFilter();
-  initReviewsCarousel();
   initBackToTop();
   initScrollAnimations();
   initContactForm();
   initCostCalculator();
   initFAQ();
-  loadReviews();
+  loadReviews().then(function() {
+    initReviewsCarousel();
+  });
 });
 
 /* PAGE LOADER */
@@ -319,79 +319,27 @@ function enableTouchScroll(element) {
 }
 
 /* LOAD REVIEWS */
+var MAX_REVIEWS = 8;
+
 async function loadReviews() {
   const container = document.getElementById('reviews-container');
   const reviewCount = document.getElementById('review-count');
 
-  const reviews = [
-    {
-      author: "Sarah Mitchell",
-      avatar: "SM",
-      rating: 5,
-      text: "Paul and his team did an amazing job removing a dangerous tree from our backyard. They were professional, efficient, and cleaned up everything perfectly. Highly recommend Tree Hoppers!",
-      date: "2 weeks ago",
-      source: "Google"
-    },
-    {
-      author: "Mike Thompson",
-      avatar: "MT",
-      rating: 5,
-      text: "After the recent storm damaged several trees on our property, Tree Hoppers responded quickly and took care of everything. Their expertise really showed. Will definitely use them again.",
-      date: "1 month ago",
-      source: "Yelp"
-    },
-    {
-      author: "Jennifer Rodriguez",
-      avatar: "JR",
-      rating: 5,
-      text: "Great fire mitigation work! They thinned out the trees around our cabin and now we feel much safer. Paul was very knowledgeable about local regulations and insurance requirements.",
-      date: "3 weeks ago",
-      source: "Google"
-    },
-    {
-      author: "David Kim",
-      avatar: "DK",
-      rating: 5,
-      text: "Best tree service in Colorado Springs. Fair prices, excellent communication, and the crew was super careful around our landscaping. They even helped us understand which trees needed attention.",
-      date: "2 months ago",
-      source: "Facebook"
-    },
-    {
-      author: "Lisa Anderson",
-      avatar: "LA",
-      rating: 5,
-      text: "We've used Tree Hoppers twice now - once for pruning and once for removing a dead pine. Both times they exceeded our expectations. Professional, on-time, and reasonably priced.",
-      date: "1 week ago",
-      source: "Google"
-    },
-    {
-      author: "Robert Chen",
-      avatar: "RC",
-      rating: 5,
-      text: "Called them for an emergency after a tree fell during a storm. They came out the same day and made everything safe. Can't thank them enough for their quick response!",
-      date: "1 month ago",
-      source: "Yelp"
-    },
-    {
-      author: "Amanda Foster",
-      avatar: "AF",
-      rating: 5,
-      text: "Paul is incredibly knowledgeable about Colorado trees and their specific needs. He helped us create a plan for our entire property. The ISA certification really shows in his work.",
-      date: "3 weeks ago",
-      source: "Google"
-    },
-    {
-      author: "James Wilson",
-      avatar: "JW",
-      rating: 5,
-      text: "Tree Hoppers transformed our overgrown backyard into a beautiful, safe space. Their attention to detail and cleanup was impressive. Would recommend to anyone in the Springs area!",
-      date: "2 weeks ago",
-      source: "Facebook"
-    }
-  ];
+  try {
+    const response = await fetch('reviews.json');
+    var reviews = await response.json();
+  } catch (e) {
+    container.innerHTML = '<p style="color: var(--gray-400); text-align: center;">Unable to load reviews.</p>';
+    return;
+  }
 
-  // Simulate loading delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  // Take the most recent reviews, capped at MAX_REVIEWS
+  reviews = reviews.slice(0, MAX_REVIEWS);
+
+  // Generate avatar initials from author name
+  reviews.forEach(function(review) {
+    review.avatar = review.author.split(' ').map(function(n) { return n[0]; }).join('');
+  });
 
   // Clear skeleton loaders
   container.innerHTML = '';
@@ -697,20 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* PARALLAX */
-function initParallax() {
-  const heroBg = document.querySelector('.hero-bg');
-
-  window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    if (heroBg && scrolled < window.innerHeight) {
-      heroBg.style.transform = `scale(1.1) translateY(${scrolled * 0.3}px)`;
-    }
-  });
-}
-
-// Initialize parallax
-initParallax();
 
 /* LAZY LOADING */
 function initLazyLoading() {
@@ -759,26 +693,57 @@ if (document.readyState === 'loading') {
   initLazyLoading();
 }
 
-/* EMERGENCY BANNER */
-function initEmergencyBanner() {
-  // Emergency banner is always visible, no close functionality needed
-}
-
 /* COST CALCULATOR */
 function initCostCalculator() {
   const heightSelect = document.getElementById('tree-height');
   const serviceSelect = document.getElementById('service-type');
   const conditionSelect = document.getElementById('tree-condition');
+  const pruningConditionSelect = document.getElementById('pruning-condition');
+  const stormConditionSelect = document.getElementById('storm-condition');
   const accessibilitySelect = document.getElementById('accessibility');
   const resultDisplay = document.getElementById('cost-result');
+
+  var conditionGroup = document.getElementById('condition-group');
+  var pruningConditionGroup = document.getElementById('pruning-condition-group');
+  var stormConditionGroup = document.getElementById('storm-condition-group');
+
+  // Show the right condition field based on service type
+  serviceSelect.addEventListener('change', function() {
+    var isRemoval = serviceSelect.value === '1';
+    var isPruning = serviceSelect.value === '0.5';
+    var isStorm = serviceSelect.value === '0.7';
+    conditionGroup.style.display = isRemoval ? '' : 'none';
+    pruningConditionGroup.style.display = isPruning ? '' : 'none';
+    stormConditionGroup.style.display = isStorm ? '' : 'none';
+    if (!isRemoval) conditionSelect.value = '';
+    if (!isPruning) pruningConditionSelect.value = '';
+    if (!isStorm) stormConditionSelect.value = '';
+    calculateCost();
+  });
+
+  function getConditionMultiplier() {
+    var sv = serviceSelect.value;
+    if (sv === '1') return parseFloat(conditionSelect.value) || 0;
+    if (sv === '0.5') return parseFloat(pruningConditionSelect.value) || 0;
+    if (sv === '0.7') return parseFloat(stormConditionSelect.value) || 0;
+    return 1;
+  }
+
+  function needsConditionInput() {
+    var sv = serviceSelect.value;
+    if (sv === '1') return !conditionSelect.value;
+    if (sv === '0.5') return !pruningConditionSelect.value;
+    if (sv === '0.7') return !stormConditionSelect.value;
+    return false;
+  }
 
   function calculateCost() {
     const height = parseFloat(heightSelect.value) || 0;
     const service = parseFloat(serviceSelect.value) || 0;
-    const condition = parseFloat(conditionSelect.value) || 0;
+    const condition = getConditionMultiplier();
     const accessibility = parseFloat(accessibilitySelect.value) || 0;
 
-    if (height && service && condition && accessibility) {
+    if (height && service && !needsConditionInput() && accessibility) {
       const baseCost = height * service * condition * accessibility;
       const minCost = Math.round(baseCost * 0.8);
       const maxCost = Math.round(baseCost * 1.2);
@@ -793,7 +758,7 @@ function initCostCalculator() {
     }
   }
 
-  [heightSelect, serviceSelect, conditionSelect, accessibilitySelect].forEach(select => {
+  [heightSelect, serviceSelect, conditionSelect, pruningConditionSelect, stormConditionSelect, accessibilitySelect].forEach(select => {
     select.addEventListener('change', calculateCost);
   });
 }
