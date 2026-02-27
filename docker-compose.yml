@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DB_PATH=/app/data/tree-hoppers.db
+    volumes:
+      - db_data:/app/data
+
+volumes:
+  db_data:

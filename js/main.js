@@ -326,7 +326,7 @@ async function loadReviews() {
   const reviewCount = document.getElementById('review-count');
 
   try {
-    const response = await fetch('reviews.json');
+    const response = await fetch('/api/reviews');
     var reviews = await response.json();
   } catch (e) {
     container.innerHTML = '<p style="color: var(--gray-400); text-align: center;">Unable to load reviews.</p>';
@@ -458,29 +458,24 @@ function initContactForm() {
     const formData = new FormData(form);
 
     try {
-      const FORMSPREE_ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT';
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData.entries()))
+      });
 
-      if (FORMSPREE_ENDPOINT !== 'YOUR_FORMSPREE_ENDPOINT') {
-        const response = await fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
+      const data = await response.json();
 
-        if (!response.ok) throw new Error('Form submission failed');
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Demo mode:', Object.fromEntries(formData.entries()));
-        console.warn('Configure FORMSPREE_ENDPOINT in main.js');
+      if (!response.ok) {
+        const msg = data.errors ? data.errors.join(', ') : 'Form submission failed';
+        throw new Error(msg);
       }
 
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
 
-      // Show success message
-      showNotification('Thank you! We\'ll contact you within 24 hours.', 'success');
+      showNotification("Thank you! We'll contact you within 24 hours.", 'success');
 
-      // Reset form
       form.reset();
       inputs.forEach(input => {
         input.classList.remove('success', 'error');
