@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../db');
-const requireApiKey = require('../middleware/requireApiKey');
+const { requireApiKey } = require('../middleware/auth');
 
-// GET /api/reviews — public
+// GET /api/reviews — public, with optional pagination
 router.get('/', (req, res) => {
+  const limit  = Math.min(parseInt(req.query.limit)  || 50, 100);
+  const offset = parseInt(req.query.offset) || 0;
+
   const db = getDb();
   const reviews = db.prepare(
-    'SELECT id, author, rating, text, date, source FROM reviews ORDER BY id ASC'
-  ).all();
+    'SELECT id, author, rating, text, date, source FROM reviews ORDER BY id ASC LIMIT ? OFFSET ?'
+  ).all(limit, offset);
   res.json(reviews);
 });
 
@@ -19,6 +22,7 @@ router.post('/', requireApiKey, (req, res) => {
   const errors = [];
   if (!author?.trim())  errors.push('author is required');
   if (!text?.trim())    errors.push('text is required');
+  if (text && text.length > 2000) errors.push('text must be under 2000 characters');
   if (!date?.trim())    errors.push('date is required');
   if (!source?.trim())  errors.push('source is required');
   const ratingNum = parseInt(rating);

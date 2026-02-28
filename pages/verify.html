@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification — Tree Hoppers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:    #9dc334;
+      --dark:       #1a2a1a;
+      --text:       #2c2c2c;
+      --bg:         #f8f9f4;
+      --card-bg:    #ffffff;
+      --radius:     12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 48px 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      line-height: 1;
+    }
+
+    h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.8rem;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+
+    p {
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: var(--dark);
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+
+    .brand {
+      margin-top: 32px;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    /* Status-specific overrides */
+    .status-success .icon::before { content: '✅'; }
+    .status-already .icon::before { content: '✅'; }
+    .status-expired .icon::before { content: '⏰'; }
+    .status-invalid .icon::before { content: '❌'; }
+  </style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="icon" aria-hidden="true"></div>
+  <h1 id="heading">Verifying...</h1>
+  <p id="body-text">Please wait.</p>
+  <a href="/" class="btn" id="cta">Back to Home</a>
+  <p class="brand">Tree Hoppers — Colorado Springs Tree Care</p>
+</div>
+
+<script>
+  const params  = new URLSearchParams(window.location.search);
+  const status  = params.get('status') || 'invalid';
+
+  const card     = document.getElementById('card');
+  const heading  = document.getElementById('heading');
+  const bodyText = document.getElementById('body-text');
+  const cta      = document.getElementById('cta');
+
+  card.classList.add('status-' + status);
+
+  const messages = {
+    success: {
+      h: 'Email Confirmed!',
+      p: "You're all set. We've sent a copy of your request details to your inbox and will be in touch within 24 hours.",
+      cta: 'Back to Home',
+    },
+    already: {
+      h: 'Already Confirmed',
+      p: 'This email address has already been verified. No action needed — we\'ll be in touch soon.',
+      cta: 'Back to Home',
+    },
+    expired: {
+      h: 'Link Expired',
+      p: 'Verification links are valid for 24 hours and this one has expired. Please submit a new request from the website.',
+      cta: 'Submit a New Request',
+    },
+    invalid: {
+      h: 'Invalid Link',
+      p: "We couldn't find this verification link. It may have already been used or the URL was copied incorrectly.",
+      cta: 'Back to Home',
+    },
+  };
+
+  const msg = messages[status] || messages.invalid;
+  heading.textContent  = msg.h;
+  bodyText.textContent = msg.p;
+  cta.textContent      = msg.cta;
+
+  if (status === 'expired') cta.href = '/#contact';
+</script>
+
+</body>
+</html>

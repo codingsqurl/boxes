@@ -46,6 +46,13 @@
       <button class="nav-item" data-tab="reviews">
         <span class="nav-icon">⭐</span> Reviews
       </button>
+      <button class="nav-item" data-tab="suggestions">
+        <span class="nav-icon">💡</span> Suggestions
+        <span class="nav-badge" id="suggestions-badge" style="display:none"></span>
+      </button>
+      <button class="nav-item dev-only hidden" data-tab="settings">
+        <span class="nav-icon">⚙️</span> Settings
+      </button>
       <button class="nav-item dev-only hidden" data-tab="users">
         <span class="nav-icon">👥</span> Users
       </button>
@@ -153,6 +160,54 @@
       </div>
       <div id="reviews-list" class="card-list">
         <div class="loading">Loading reviews...</div>
+      </div>
+    </section>
+
+    <!-- SUGGESTIONS TAB -->
+    <section id="tab-suggestions" class="tab-content">
+      <div class="tab-header">
+        <h2>Suggestions</h2>
+      </div>
+
+      <!-- Submit form — visible to everyone -->
+      <div class="suggestion-submit-box">
+        <h3>Got an idea for the website?</h3>
+        <p>Send a suggestion directly to the developer. Let them know what you'd like to see added or changed.</p>
+        <form id="suggestion-form">
+          <textarea id="suggestion-message" rows="4" placeholder="e.g. Can we add a page showing our equipment? Or a before and after gallery?..." required maxlength="1000"></textarea>
+          <div class="suggestion-form-footer">
+            <span id="suggestion-char-count" class="char-count">0 / 1000</span>
+            <button type="submit" class="btn-primary">Send Suggestion</button>
+          </div>
+        </form>
+        <p id="suggestion-success" class="suggestion-success hidden">Sent! The developer will see it shortly.</p>
+      </div>
+
+      <!-- Inbox — developer only -->
+      <div id="suggestions-inbox" class="dev-only hidden">
+        <h3 class="inbox-title">Inbox</h3>
+        <div id="suggestions-list" class="card-list">
+          <div class="loading">Loading suggestions...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS TAB (developer only) -->
+    <section id="tab-settings" class="tab-content">
+      <div class="tab-header">
+        <h2>Settings</h2>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="settings-title">Email Templates</h3>
+        <p class="settings-desc">
+          Edit the emails customers receive automatically. Use these variables anywhere in the subject or body:<br>
+          <code>{{firstName}}</code> <code>{{lastName}}</code> <code>{{service}}</code> <code>{{city}}</code>
+          <code>{{date}}</code> <code>{{time}}</code> <code>{{contactPhone}}</code> <code>{{contactEmail}}</code>
+        </p>
+        <div id="templates-list">
+          <div class="loading">Loading templates...</div>
+        </div>
       </div>
     </section>
 

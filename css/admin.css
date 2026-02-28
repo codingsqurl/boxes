@@ -279,6 +279,22 @@ body {
 .badge-confirmed{ background: rgba(157,195,52,0.2);  color: var(--primary); }
 .badge-completed{ background: rgba(72,187,120,0.2);  color: #68d391; }
 .badge-cancelled{ background: rgba(252,129,129,0.2); color: #fc8181; }
+.badge-admin    { background: rgba(66,153,225,0.2);  color: #63b3ed; }
+.badge-developer{ background: rgba(157,195,52,0.2);  color: var(--primary); }
+
+/* Email verification badges */
+.badge-email-verified,
+.badge-email-unverified {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.badge-email-verified   { background: rgba(72,187,120,0.15); color: #68d391; }
+.badge-email-unverified { background: rgba(255,255,255,0.06); color: var(--gray-400); }
+
+.card-badges { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
 /* ── Blog Editor ────────────────────────────────────────────────────────────── */
 .post-editor {
@@ -397,6 +413,140 @@ body {
   margin-bottom: 10px;
 }
 .user-info { flex: 1; }
+
+/* ── Suggestions tab ─────────────────────────────────────────────────────────── */
+.suggestion-submit-box {
+  background: var(--dark-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 32px;
+  max-width: 680px;
+}
+.suggestion-submit-box h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.suggestion-submit-box > p {
+  color: var(--gray-400);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+.suggestion-submit-box textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+.suggestion-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.char-count { color: var(--gray-400); font-size: 0.8rem; }
+.suggestion-success { color: #68d391; font-size: 0.9rem; margin-top: 12px; }
+
+.inbox-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.suggestion-card {
+  background: var(--dark-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.suggestion-card:hover { border-color: rgba(157,195,52,0.3); }
+.suggestion-message {
+  color: var(--gray-200);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-top: 12px;
+  white-space: pre-wrap;
+}
+
+/* ── Settings tab ────────────────────────────────────────────────────────────── */
+.settings-section { max-width: 760px; }
+
+.settings-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: var(--white);
+}
+
+.settings-desc {
+  color: var(--gray-400);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.settings-desc code {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.82rem;
+  color: var(--primary);
+  font-family: monospace;
+}
+
+.template-card {
+  background: var(--dark-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.template-label {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.template-updated {
+  color: var(--gray-400);
+  font-size: 0.8rem;
+  margin-bottom: 20px;
+}
+
+.template-form .form-group input[type="text"],
+.template-form .form-group textarea {
+  font-family: monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.template-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.tpl-saved {
+  color: #68d391;
+  font-size: 0.9rem;
+}
 
 @media (max-width: 768px) {
   .dashboard { grid-template-columns: 1fr; }

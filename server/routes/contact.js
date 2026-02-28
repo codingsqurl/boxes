@@ -1,29 +1,16 @@
 const express = require('express');
-const router = express.Router();
+const router  = express.Router();
+const crypto  = require('crypto');
 const { getDb } = require('../db');
-const { sendLeadEmail, sendConfirmationEmail } = require('../email');
+const { sendLeadEmail, sendVerificationEmail } = require('../email');
 const { sendLeadSms } = require('../sms');
-
-const VALID_SERVICES = ['pruning', 'removal', 'fire', 'storm', 'consultation', 'other'];
+const { validateContact } = require('../constants');
 
 router.post('/', async (req, res, next) => {
   try {
     const { firstName, lastName, phone, email, service, city, message } = req.body;
 
-    const errors = [];
-    if (!firstName?.trim()) errors.push('firstName is required');
-    if (!lastName?.trim())  errors.push('lastName is required');
-    if (!phone?.trim())     errors.push('phone is required');
-    if (!email?.trim())     errors.push('email is required');
-    if (!service || !VALID_SERVICES.includes(service)) errors.push('valid service is required');
-    if (!city?.trim())      errors.push('city is required');
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !emailRegex.test(email)) errors.push('email format is invalid');
-
-    const phoneDigits = (phone || '').replace(/\D/g, '');
-    if (phone && phoneDigits.length !== 10) errors.push('phone must be 10 digits');
-
+    const errors = validateContact({ firstName, lastName, phone, email, service, city });
     if (errors.length > 0) return res.status(400).json({ errors });
 
     const db = getDb();
@@ -36,9 +23,18 @@ router.post('/', async (req, res, next) => {
     );
 
     const lead = { firstName, lastName, phone, email, service, city, message };
+
+    // Notify Paul immediately (doesn't wait for email verification)
     sendLeadEmail(lead).catch(err => console.error('[email] Lead email failed:', err.message));
-    sendConfirmationEmail(lead).catch(err => console.error('[email] Confirmation email failed:', err.message));
     sendLeadSms(lead).catch(err => console.error('[sms] Lead SMS failed:', err.message));
+
+    // Send verification email to customer — confirmation is sent after they click the link
+    const token = crypto.randomBytes(32).toString('hex');
+    db.prepare(
+      'INSERT INTO email_verifications (token, type, record_id) VALUES (?, ?, ?)'
+    ).run(token, 'lead', result.lastInsertRowid);
+
+    sendVerificationEmail(lead, token).catch(err => console.error('[email] Verification email failed:', err.message));
 
     res.status(201).json({ success: true, id: result.lastInsertRowid });
   } catch (err) {

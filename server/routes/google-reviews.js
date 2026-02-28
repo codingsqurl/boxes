@@ -32,9 +32,22 @@ router.get('/', async (req, res, next) => {
       }
     }
 
-    // Fetch from Google Places API
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${GOOGLE_PLACE_ID}&fields=reviews,rating,user_ratings_total&key=${GOOGLE_PLACES_API_KEY}`;
-    const response = await fetch(url);
+    // Fetch from Google Places API — key kept server-side, never returned to client
+    const params = new URLSearchParams({
+      place_id: GOOGLE_PLACE_ID,
+      fields: 'reviews,rating,user_ratings_total',
+      key: GOOGLE_PLACES_API_KEY,
+    });
+
+    let response;
+    try {
+      response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?${params}`);
+    } catch (fetchErr) {
+      console.error('[google-reviews] Network error fetching Places API:', fetchErr.message);
+      const fallback = db.prepare('SELECT id, author, rating, text, date, source FROM reviews ORDER BY id ASC').all();
+      return res.json({ source: 'internal_fallback', reviews: fallback });
+    }
+
     const data = await response.json();
 
     if (data.status !== 'OK') {
@@ -51,7 +64,7 @@ router.get('/', async (req, res, next) => {
       source: 'Google',
     }));
 
-    // Store in cache
+    // Replace cache with fresh data
     db.prepare('DELETE FROM google_reviews_cache').run();
     db.prepare('INSERT INTO google_reviews_cache (data) VALUES (?)').run(JSON.stringify(reviews));
 

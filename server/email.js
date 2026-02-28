@@ -1,11 +1,7 @@
 const nodemailer = require('nodemailer');
+const { SERVICE_LABELS } = require('./constants');
 
 let transporter = null;
-
-const SERVICE_LABELS = {
-  pruning: 'Tree Pruning', removal: 'Tree Removal', fire: 'Fire Mitigation',
-  storm: 'Storm Damage', consultation: 'Consultation', other: 'Other',
-};
 
 function getTransporter() {
   if (transporter) return transporter;
@@ -30,9 +26,31 @@ function getTransporter() {
   return transporter;
 }
 
+function getContactInfo() {
+  return {
+    email: process.env.CONTACT_EMAIL || process.env.GMAIL_USER,
+    phone: process.env.CONTACT_PHONE || '(719) 287-8836',
+  };
+}
+
+// Load a template from DB and replace {{variables}} with actual values
+function renderTemplate(key, vars) {
+  const { getDb } = require('./db');
+  const db = getDb();
+  const tpl = db.prepare('SELECT subject, body FROM email_templates WHERE key = ?').get(key);
+  if (!tpl) return null;
+
+  const fill = (str) => str.replace(/\{\{(\w+)\}\}/g, (_, k) => vars[k] ?? '');
+  return { subject: fill(tpl.subject), body: fill(tpl.body) };
+}
+
+// ── Internal notification to Paul ────────────────────────────────────────────
+
 async function sendLeadEmail(lead) {
   const transport = getTransporter();
   if (!transport) return;
+
+  const { email: contactEmail } = getContactInfo();
 
   const text = `
 New lead from Tree Hoppers website:
@@ -51,48 +69,20 @@ Submitted: ${new Date().toLocaleString('en-US', { timeZone: 'America/Denver' })}
 
   await transport.sendMail({
     from: `"Tree Hoppers Website" <${process.env.GMAIL_USER}>`,
-    to: 'treehopperscos@gmail.com',
+    to: contactEmail,
     replyTo: lead.email,
     subject: `New Lead — ${lead.firstName} ${lead.lastName}`,
     text,
   });
 }
 
-async function sendConfirmationEmail(lead) {
+async function sendAppointmentNotification(appt) {
   const transport = getTransporter();
   if (!transport) return;
+
+  const { email: contactEmail } = getContactInfo();
 
   const text = `
-Hi ${lead.firstName},
-
-Thanks for reaching out to Tree Hoppers! We've received your request and will be in touch within 24 hours.
-
-Here's what you submitted:
-  Service: ${SERVICE_LABELS[lead.service] || lead.service}
-  City:    ${lead.city}
-
-If you need to reach us sooner:
-  Call/Text: (719) 287-8836
-  Email:     treehopperscos@gmail.com
-
-Talk soon,
-Paul & the Tree Hoppers crew
-  `.trim();
-
-  await transport.sendMail({
-    from: `"Tree Hoppers" <${process.env.GMAIL_USER}>`,
-    to: lead.email,
-    subject: `We got your request — Tree Hoppers`,
-    text,
-  });
-}
-
-async function sendAppointmentEmail(appt) {
-  const transport = getTransporter();
-  if (!transport) return;
-
-  // Notify Paul
-  const internalText = `
 New estimate appointment scheduled:
 
 Name:    ${appt.firstName} ${appt.lastName}
@@ -109,37 +99,101 @@ ${appt.message || '(none)'}
 
   await transport.sendMail({
     from: `"Tree Hoppers Website" <${process.env.GMAIL_USER}>`,
-    to: 'treehopperscos@gmail.com',
+    to: contactEmail,
     replyTo: appt.email,
     subject: `New Appointment — ${appt.firstName} ${appt.lastName} on ${appt.preferredDate}`,
-    text: internalText,
+    text,
+  });
+}
+
+// ── Customer-facing emails (sent after email verification) ───────────────────
+
+async function sendVerificationEmail(contact, token) {
+  const transport = getTransporter();
+  if (!transport) return;
+
+  const siteUrl = (process.env.SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+  const verifyLink = `${siteUrl}/api/verify/${token}`;
+
+  const rendered = renderTemplate('email_verification', {
+    firstName:  contact.firstName,
+    lastName:   contact.lastName,
+    verifyLink,
   });
 
-  // Confirm to customer
-  const confirmText = `
-Hi ${appt.firstName},
+  if (!rendered) return; // template missing, skip silently
 
-Your estimate appointment with Tree Hoppers has been scheduled!
+  await transport.sendMail({
+    from: `"Tree Hoppers" <${process.env.GMAIL_USER}>`,
+    to: contact.email,
+    subject: rendered.subject,
+    text: rendered.body,
+  });
+}
 
-  Service: ${SERVICE_LABELS[appt.service] || appt.service}
-  Date:    ${appt.preferredDate}
-  Time:    ${appt.preferredTime}
-  City:    ${appt.city}
+async function sendConfirmationEmail(lead) {
+  const transport = getTransporter();
+  if (!transport) return;
 
-We'll call you the day before to confirm. If you need to reschedule:
-  Call/Text: (719) 287-8836
-  Email:     treehopperscos@gmail.com
+  const { email: contactEmail, phone: contactPhone } = getContactInfo();
 
-See you soon,
-Paul & the Tree Hoppers crew
-  `.trim();
+  const rendered = renderTemplate('quote_confirmation', {
+    firstName:    lead.firstName,
+    lastName:     lead.lastName,
+    service:      SERVICE_LABELS[lead.service] || lead.service,
+    city:         lead.city,
+    contactPhone,
+    contactEmail,
+  });
+
+  if (!rendered) return;
+
+  await transport.sendMail({
+    from: `"Tree Hoppers" <${process.env.GMAIL_USER}>`,
+    to: lead.email,
+    subject: rendered.subject,
+    text: rendered.body,
+  });
+}
+
+async function sendAppointmentConfirmation(appt) {
+  const transport = getTransporter();
+  if (!transport) return;
+
+  const { email: contactEmail, phone: contactPhone } = getContactInfo();
+
+  const rendered = renderTemplate('appointment_confirmation', {
+    firstName:    appt.firstName,
+    lastName:     appt.lastName,
+    service:      SERVICE_LABELS[appt.service] || appt.service,
+    city:         appt.city,
+    date:         appt.preferredDate,
+    time:         appt.preferredTime,
+    contactPhone,
+    contactEmail,
+  });
+
+  if (!rendered) return;
 
   await transport.sendMail({
     from: `"Tree Hoppers" <${process.env.GMAIL_USER}>`,
     to: appt.email,
-    subject: `Appointment Confirmed — Tree Hoppers`,
-    text: confirmText,
+    subject: rendered.subject,
+    text: rendered.body,
   });
 }
 
-module.exports = { sendLeadEmail, sendConfirmationEmail, sendAppointmentEmail };
+// Legacy alias — kept so any old callers still work
+async function sendAppointmentEmail(appt) {
+  await sendAppointmentNotification(appt);
+  await sendAppointmentConfirmation(appt);
+}
+
+module.exports = {
+  sendLeadEmail,
+  sendAppointmentNotification,
+  sendVerificationEmail,
+  sendConfirmationEmail,
+  sendAppointmentConfirmation,
+  sendAppointmentEmail,
+};

@@ -1,10 +1,10 @@
 const express = require('express');
-const router = express.Router();
+const router  = express.Router();
+const crypto  = require('crypto');
 const { getDb } = require('../db');
-const { sendAppointmentEmail } = require('../email');
+const { sendAppointmentNotification, sendVerificationEmail } = require('../email');
 const { sendAppointmentSms } = require('../sms');
-
-const VALID_SERVICES = ['pruning', 'removal', 'fire', 'storm', 'consultation', 'other'];
+const { validateContact, VALID_SERVICES } = require('../constants');
 
 const TIME_SLOTS = [
   '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
@@ -37,47 +37,50 @@ router.post('/', async (req, res, next) => {
   try {
     const { firstName, lastName, phone, email, service, city, preferredDate, preferredTime, message } = req.body;
 
-    const errors = [];
-    if (!firstName?.trim())    errors.push('firstName is required');
-    if (!lastName?.trim())     errors.push('lastName is required');
-    if (!phone?.trim())        errors.push('phone is required');
-    if (!email?.trim())        errors.push('email is required');
-    if (!service || !VALID_SERVICES.includes(service)) errors.push('valid service is required');
-    if (!city?.trim())         errors.push('city is required');
+    const errors = validateContact({ firstName, lastName, phone, email, service, city });
     if (!preferredDate?.trim()) errors.push('preferredDate is required');
     if (!preferredTime?.trim()) errors.push('preferredTime is required');
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !emailRegex.test(email)) errors.push('email format is invalid');
-
-    const phoneDigits = (phone || '').replace(/\D/g, '');
-    if (phone && phoneDigits.length !== 10) errors.push('phone must be 10 digits');
-
-    if (!TIME_SLOTS.includes(preferredTime)) errors.push('invalid time slot');
+    if (preferredTime && !TIME_SLOTS.includes(preferredTime)) errors.push('invalid time slot');
 
     if (errors.length > 0) return res.status(400).json({ errors });
 
-    // Check slot is still available
     const db = getDb();
-    const conflict = db.prepare(`
-      SELECT id FROM appointments
-      WHERE preferred_date = ? AND preferred_time = ? AND status != 'cancelled'
-    `).get(preferredDate, preferredTime);
 
-    if (conflict) return res.status(409).json({ error: 'That time slot is no longer available. Please pick another.' });
+    // Wrap check + insert in a transaction to prevent double-booking race conditions
+    const book = db.transaction(() => {
+      const conflict = db.prepare(`
+        SELECT id FROM appointments
+        WHERE preferred_date = ? AND preferred_time = ? AND status != 'cancelled'
+      `).get(preferredDate, preferredTime);
 
-    const result = db.prepare(`
-      INSERT INTO appointments (first_name, last_name, phone, email, service, city, preferred_date, preferred_time, message)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      firstName.trim(), lastName.trim(), phone.trim(),
-      email.trim(), service, city.trim(),
-      preferredDate, preferredTime, (message || '').trim()
-    );
+      if (conflict) return null;
+
+      return db.prepare(`
+        INSERT INTO appointments (first_name, last_name, phone, email, service, city, preferred_date, preferred_time, message)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        firstName.trim(), lastName.trim(), phone.trim(),
+        email.trim(), service, city.trim(),
+        preferredDate, preferredTime, (message || '').trim()
+      );
+    });
+
+    const result = book();
+    if (!result) return res.status(409).json({ error: 'That time slot is no longer available. Please pick another.' });
 
     const appt = { firstName, lastName, phone, email, service, city, preferredDate, preferredTime, message };
-    sendAppointmentEmail(appt).catch(err => console.error('[email] Appointment email failed:', err.message));
+
+    // Notify Paul immediately (doesn't wait for email verification)
+    sendAppointmentNotification(appt).catch(err => console.error('[email] Appointment notification failed:', err.message));
     sendAppointmentSms(appt).catch(err => console.error('[sms] Appointment SMS failed:', err.message));
+
+    // Send verification email to customer — confirmation is sent after they click the link
+    const token = crypto.randomBytes(32).toString('hex');
+    db.prepare(
+      'INSERT INTO email_verifications (token, type, record_id) VALUES (?, ?, ?)'
+    ).run(token, 'appointment', result.lastInsertRowid);
+
+    sendVerificationEmail(appt, token).catch(err => console.error('[email] Verification email failed:', err.message));
 
     res.status(201).json({ success: true, id: result.lastInsertRowid });
   } catch (err) {

@@ -66,6 +66,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     userRole = data.role;
     localStorage.setItem('th_admin_key', apiKey);
     localStorage.setItem('th_admin_role', userRole);
+    localStorage.setItem('th_admin_username', data.username);
     err.classList.add('hidden');
     showDashboard();
   } else {
@@ -76,13 +77,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 document.getElementById('logout-btn').addEventListener('click', () => {
   localStorage.removeItem('th_admin_key');
   localStorage.removeItem('th_admin_role');
+  localStorage.removeItem('th_admin_username');
   apiKey = '';
   userRole = '';
   showLogin();
 });
 
 // ── Tab navigation ────────────────────────────────────────────────────────────
-const tabLoaders = { leads: loadLeads, appointments: loadAppointments, blog: loadBlog, reviews: loadReviews, users: loadUsers };
+const tabLoaders = { leads: loadLeads, appointments: loadAppointments, blog: loadBlog, reviews: loadReviews, suggestions: loadSuggestions, settings: loadSettings, users: loadUsers };
 
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -103,6 +105,12 @@ function formatDate(str) {
 
 function badge(status) {
   return `<span class="badge badge-${status}">${status}</span>`;
+}
+
+function emailVerifiedBadge(verified) {
+  return verified
+    ? `<span class="badge-email-verified" title="Email confirmed">✓ Verified</span>`
+    : `<span class="badge-email-unverified" title="Awaiting email confirmation">Unverified</span>`;
 }
 
 const SERVICE_LABELS = {
@@ -136,7 +144,7 @@ async function loadLeads() {
           <div class="card-name">${lead.first_name} ${lead.last_name}</div>
           <div class="card-date">${formatDate(lead.created_at)}</div>
         </div>
-        ${badge(lead.status)}
+        <div class="card-badges">${badge(lead.status)} ${emailVerifiedBadge(lead.email_verified)}</div>
       </div>
       <div class="card-meta">
         <span class="meta-tag service">${SERVICE_LABELS[lead.service] || lead.service}</span>
@@ -196,7 +204,7 @@ async function loadAppointments() {
           <div class="card-name">${a.first_name} ${a.last_name}</div>
           <div class="card-date">📅 ${a.preferred_date} at ${a.preferred_time}</div>
         </div>
-        ${badge(a.status)}
+        <div class="card-badges">${badge(a.status)} ${emailVerifiedBadge(a.email_verified)}</div>
       </div>
       <div class="card-meta">
         <span class="meta-tag service">${SERVICE_LABELS[a.service] || a.service}</span>
@@ -423,6 +431,126 @@ async function resetUserPassword(id, input) {
   else alert('Failed to update password.');
 }
 
+// ── SETTINGS — Email Templates (developer only) ───────────────────────────────
+async function loadSettings() {
+  const container = document.getElementById('templates-list');
+  container.innerHTML = '<div class="loading">Loading...</div>';
+
+  const { ok, data } = await apiJson(`${API}/templates`);
+  if (!ok) { container.innerHTML = '<div class="empty">Failed to load templates.</div>'; return; }
+
+  container.innerHTML = data.map(t => `
+    <div class="template-card" id="tpl-${t.key}">
+      <div class="template-label">${t.label}</div>
+      <div class="template-updated">Last updated: ${t.updated_at ? formatDate(t.updated_at) : 'never'}</div>
+      <form class="template-form" onsubmit="saveTemplate(event, '${t.key}')">
+        <div class="form-group">
+          <label>Subject line</label>
+          <input type="text" class="tpl-subject" value="${t.subject.replace(/"/g, '&quot;')}" required>
+        </div>
+        <div class="form-group">
+          <label>Email body</label>
+          <textarea class="tpl-body" rows="12">${t.body}</textarea>
+        </div>
+        <div class="template-actions">
+          <button type="submit" class="btn-primary">Save Template</button>
+          <span class="tpl-saved hidden">Saved ✓</span>
+        </div>
+      </form>
+    </div>
+  `).join('');
+}
+
+async function saveTemplate(e, key) {
+  e.preventDefault();
+  const card    = document.getElementById(`tpl-${key}`);
+  const subject = card.querySelector('.tpl-subject').value.trim();
+  const body    = card.querySelector('.tpl-body').value.trim();
+  const saved   = card.querySelector('.tpl-saved');
+
+  const { ok } = await apiJson(`${API}/templates/${key}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subject, body }),
+  });
+
+  if (ok) {
+    saved.classList.remove('hidden');
+    setTimeout(() => saved.classList.add('hidden'), 3000);
+  } else {
+    alert('Failed to save template.');
+  }
+}
+
+// ── SUGGESTIONS ───────────────────────────────────────────────────────────────
+async function loadSuggestions() {
+  // Developer: load inbox
+  if (userRole === 'developer') {
+    const list = document.getElementById('suggestions-list');
+    list.innerHTML = '<div class="loading">Loading...</div>';
+    const { ok, data } = await apiJson(`${API}/suggestions`);
+    if (!ok) { list.innerHTML = '<div class="empty">Failed to load suggestions.</div>'; return; }
+
+    // Update badge
+    const badge = document.getElementById('suggestions-badge');
+    badge.textContent = data.length > 0 ? data.length : '';
+    badge.style.display = data.length > 0 ? '' : 'none';
+
+    if (data.length === 0) { list.innerHTML = '<div class="empty">No suggestions yet.</div>'; return; }
+
+    list.innerHTML = data.map(s => `
+      <div class="suggestion-card" id="suggestion-${s.id}">
+        <div class="card-top">
+          <div>
+            <div class="card-name">${s.username}</div>
+            <div class="card-date">${formatDate(s.created_at)}</div>
+          </div>
+          <button class="btn-ghost" onclick="dismissSuggestion(${s.id})">Dismiss</button>
+        </div>
+        <div class="suggestion-message">${s.message}</div>
+      </div>
+    `).join('');
+  }
+}
+
+async function dismissSuggestion(id) {
+  const { ok } = await apiJson(`${API}/suggestions/${id}`, { method: 'DELETE' });
+  if (ok) {
+    document.getElementById(`suggestion-${id}`)?.remove();
+    const remaining = document.querySelectorAll('.suggestion-card').length;
+    const badge = document.getElementById('suggestions-badge');
+    badge.textContent = remaining > 0 ? remaining : '';
+    badge.style.display = remaining > 0 ? '' : 'none';
+    if (remaining === 0) {
+      document.getElementById('suggestions-list').innerHTML = '<div class="empty">No suggestions yet.</div>';
+    }
+  }
+}
+
+// Character counter
+document.getElementById('suggestion-message').addEventListener('input', function () {
+  document.getElementById('suggestion-char-count').textContent = `${this.value.length} / 1000`;
+});
+
+document.getElementById('suggestion-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const message = document.getElementById('suggestion-message').value.trim();
+  const username = localStorage.getItem('th_admin_username') || 'admin';
+
+  const { ok } = await apiJson(`${API}/suggestions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, username }),
+  });
+
+  if (ok) {
+    document.getElementById('suggestion-form').reset();
+    document.getElementById('suggestion-char-count').textContent = '0 / 1000';
+    document.getElementById('suggestion-success').classList.remove('hidden');
+    setTimeout(() => document.getElementById('suggestion-success').classList.add('hidden'), 4000);
+  }
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 const savedKey  = localStorage.getItem('th_admin_key');
 const savedRole = localStorage.getItem('th_admin_role');
@@ -451,3 +579,5 @@ window.deletePost = deletePost;
 window.deleteReview = deleteReview;
 window.deleteUser = deleteUser;
 window.resetUserPassword = resetUserPassword;
+window.dismissSuggestion = dismissSuggestion;
+window.saveTemplate = saveTemplate;

@@ -1,3 +1,5 @@
+const { SERVICE_LABELS } = require('./constants');
+
 let client = null;
 
 function getClient() {
@@ -24,16 +26,11 @@ async function sendLeadSms(lead) {
     return;
   }
 
-  const serviceLabels = {
-    pruning: 'Tree Pruning', removal: 'Tree Removal', fire: 'Fire Mitigation',
-    storm: 'Storm Damage', consultation: 'Consultation', other: 'Other',
-  };
-
   const body = [
-    '🌲 New Tree Hoppers Lead!',
+    'New Tree Hoppers Lead!',
     `Name: ${lead.firstName} ${lead.lastName}`,
     `Phone: ${lead.phone}`,
-    `Service: ${serviceLabels[lead.service] || lead.service}`,
+    `Service: ${SERVICE_LABELS[lead.service] || lead.service}`,
     `City: ${lead.city}`,
     lead.message ? `Note: ${lead.message.slice(0, 80)}` : null,
   ].filter(Boolean).join('\n');
@@ -49,10 +46,10 @@ async function sendAppointmentSms(appt) {
   if (!TWILIO_FROM || !TWILIO_TO) return;
 
   const body = [
-    '📅 New Estimate Scheduled!',
+    'New Estimate Scheduled!',
     `Name: ${appt.firstName} ${appt.lastName}`,
     `Phone: ${appt.phone}`,
-    `Service: ${appt.service}`,
+    `Service: ${SERVICE_LABELS[appt.service] || appt.service}`,
     `Date: ${appt.preferredDate} at ${appt.preferredTime}`,
     `City: ${appt.city}`,
   ].join('\n');

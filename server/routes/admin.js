@@ -5,8 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const { getDb } = require('../db');
-const requireApiKey = require('../middleware/requireApiKey');
-const requireDeveloper = require('../middleware/requireDeveloper');
+const { requireApiKey, requireDeveloper } = require('../middleware/auth');
 
 // ── Login ─────────────────────────────────────────────────────────────────────
 router.post('/login', (req, res) => {
@@ -94,12 +93,21 @@ const upload = multer({
   },
 });
 
+function deleteImageFile(imageUrl) {
+  if (!imageUrl) return;
+  const filename = path.basename(imageUrl);
+  const filepath = path.join(uploadDir, filename);
+  fs.unlink(filepath, err => {
+    if (err && err.code !== 'ENOENT') console.error('[admin] Failed to delete image:', err.message);
+  });
+}
+
 // ── LEADS ─────────────────────────────────────────────────────────────────────
 router.get('/leads', (req, res) => {
   const db = getDb();
   const leads = db.prepare(`
     SELECT id, first_name, last_name, phone, email, service, city, message,
-           status, notes, created_at
+           status, notes, email_verified, created_at
     FROM leads ORDER BY created_at DESC
   `).all();
   res.json(leads);
@@ -130,7 +138,7 @@ router.get('/appointments', (req, res) => {
   const db = getDb();
   const appts = db.prepare(`
     SELECT id, first_name, last_name, phone, email, service, city,
-           preferred_date, preferred_time, message, status, created_at
+           preferred_date, preferred_time, message, status, email_verified, created_at
     FROM appointments ORDER BY preferred_date ASC, preferred_time ASC
   `).all();
   res.json(appts);
@@ -199,11 +207,14 @@ router.patch('/blog/:id', upload.single('image'), (req, res) => {
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
 
   const db = getDb();
-  const post = db.prepare('SELECT id FROM blog_posts WHERE id = ?').get(id);
+  const post = db.prepare('SELECT id, image_url FROM blog_posts WHERE id = ?').get(id);
   if (!post) return res.status(404).json({ error: 'Post not found' });
 
   const { title, excerpt, content, published } = req.body;
   const image_url = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+  // Delete old image from disk when a new one is uploaded
+  if (image_url && post.image_url) deleteImageFile(post.image_url);
 
   if (title !== undefined)     db.prepare('UPDATE blog_posts SET title = ? WHERE id = ?').run(title.trim(), id);
   if (excerpt !== undefined)   db.prepare('UPDATE blog_posts SET excerpt = ? WHERE id = ?').run(excerpt.trim(), id);
@@ -214,13 +225,75 @@ router.patch('/blog/:id', upload.single('image'), (req, res) => {
   res.json({ success: true });
 });
 
+// ── EMAIL TEMPLATES (developer only) ─────────────────────────────────────────
+router.get('/templates', requireDeveloper, (req, res) => {
+  const db = getDb();
+  const templates = db.prepare(
+    'SELECT key, label, subject, body, updated_at FROM email_templates ORDER BY key ASC'
+  ).all();
+  res.json(templates);
+});
+
+router.patch('/templates/:key', requireDeveloper, (req, res) => {
+  const { subject, body } = req.body || {};
+  if (!subject?.trim()) return res.status(400).json({ error: 'Subject is required' });
+  if (!body?.trim())    return res.status(400).json({ error: 'Body is required' });
+
+  const db = getDb();
+  const tpl = db.prepare('SELECT key FROM email_templates WHERE key = ?').get(req.params.key);
+  if (!tpl) return res.status(404).json({ error: 'Template not found' });
+
+  db.prepare(
+    `UPDATE email_templates SET subject = ?, body = ?, updated_at = datetime('now') WHERE key = ?`
+  ).run(subject.trim(), body.trim(), req.params.key);
+
+  res.json({ success: true });
+});
+
+// ── SUGGESTIONS ───────────────────────────────────────────────────────────────
+// Any logged-in user can submit
+router.post('/suggestions', (req, res) => {
+  const { message, username } = req.body || {};
+  if (!message?.trim()) return res.status(400).json({ error: 'Message is required' });
+  if (message.trim().length > 1000) return res.status(400).json({ error: 'Message must be under 1000 characters' });
+
+  const db = getDb();
+  const result = db.prepare(
+    'INSERT INTO suggestions (username, message) VALUES (?, ?)'
+  ).run((username || 'unknown').trim(), message.trim());
+
+  res.status(201).json({ success: true, id: result.lastInsertRowid });
+});
+
+// Only developer can read and dismiss suggestions
+router.get('/suggestions', requireDeveloper, (req, res) => {
+  const db = getDb();
+  const suggestions = db.prepare(
+    'SELECT id, username, message, created_at FROM suggestions ORDER BY created_at DESC'
+  ).all();
+  res.json(suggestions);
+});
+
+router.delete('/suggestions/:id', requireDeveloper, (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
+  const db = getDb();
+  const result = db.prepare('DELETE FROM suggestions WHERE id = ?').run(id);
+  if (result.changes === 0) return res.status(404).json({ error: 'Suggestion not found' });
+  res.json({ ok: true });
+});
+
 router.delete('/blog/:id', (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
 
   const db = getDb();
-  const result = db.prepare('DELETE FROM blog_posts WHERE id = ?').run(id);
-  if (result.changes === 0) return res.status(404).json({ error: 'Post not found' });
+  const post = db.prepare('SELECT image_url FROM blog_posts WHERE id = ?').get(id);
+  if (!post) return res.status(404).json({ error: 'Post not found' });
+
+  db.prepare('DELETE FROM blog_posts WHERE id = ?').run(id);
+  deleteImageFile(post.image_url);
+
   res.json({ success: true });
 });
 
