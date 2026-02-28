@@ -31,6 +31,8 @@ function initDb() {
       service     TEXT    NOT NULL,
       city        TEXT    NOT NULL,
       message     TEXT,
+      status      TEXT    NOT NULL DEFAULT 'new',
+      notes       TEXT,
       created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
     );
 
@@ -49,7 +51,43 @@ function initDb() {
       key   TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS appointments (
+      id             INTEGER PRIMARY KEY AUTOINCREMENT,
+      first_name     TEXT NOT NULL,
+      last_name      TEXT NOT NULL,
+      phone          TEXT NOT NULL,
+      email          TEXT NOT NULL,
+      service        TEXT NOT NULL,
+      city           TEXT NOT NULL,
+      preferred_date TEXT NOT NULL,
+      preferred_time TEXT NOT NULL,
+      message        TEXT,
+      status         TEXT NOT NULL DEFAULT 'pending',
+      created_at     TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS blog_posts (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      title      TEXT NOT NULL,
+      slug       TEXT NOT NULL UNIQUE,
+      excerpt    TEXT NOT NULL,
+      content    TEXT NOT NULL,
+      image_url  TEXT,
+      published  INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS google_reviews_cache (
+      id        INTEGER PRIMARY KEY AUTOINCREMENT,
+      data      TEXT NOT NULL,
+      cached_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
+
+  // Migrate existing leads table if status/notes columns are missing
+  try { db.exec(`ALTER TABLE leads ADD COLUMN status TEXT NOT NULL DEFAULT 'new'`); } catch {}
+  try { db.exec(`ALTER TABLE leads ADD COLUMN notes TEXT`); } catch {}
 
   console.log('Database initialized');
 }

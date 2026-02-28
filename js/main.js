@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
   initContactForm();
   initCostCalculator();
   initFAQ();
+  initLightbox();
+  initBeforeAfter();
+  initBlogPreview();
   loadReviews().then(function() {
     initReviewsCarousel();
   });
@@ -420,29 +423,73 @@ function initScrollAnimations() {
 /* CONTACT FORM */
 function initContactForm() {
   const form = document.getElementById('contact-form');
-
   if (!form) return;
 
-  // Add real-time validation
+  const contactType   = document.getElementById('contact-type');
+  const scheduleFields = document.getElementById('schedule-fields');
+  const submitBtnText  = document.getElementById('submit-btn-text');
+  const formNote       = document.getElementById('form-note');
+  const dateInput      = document.getElementById('s-date');
+  const timeSelect     = document.getElementById('s-time');
+
+  // Set min date to tomorrow
+  if (dateInput) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.min = tomorrow.toISOString().split('T')[0];
+  }
+
+  function updateMode() {
+    const isSchedule = contactType.value === 'schedule';
+    scheduleFields.style.display = isSchedule ? '' : 'none';
+    submitBtnText.textContent = isSchedule ? 'Schedule My Estimate' : 'Request Free Quote';
+    formNote.textContent = isSchedule
+      ? "We'll call to confirm your appointment"
+      : 'We typically respond within 24 hours';
+    if (dateInput)  isSchedule ? dateInput.setAttribute('required', '')  : dateInput.removeAttribute('required');
+    if (timeSelect) isSchedule ? timeSelect.setAttribute('required', '') : timeSelect.removeAttribute('required');
+  }
+
+  contactType.addEventListener('change', updateMode);
+
+  // Load available slots when date changes
+  if (dateInput) {
+    dateInput.addEventListener('change', async () => {
+      const date = dateInput.value;
+      if (!date) return;
+      timeSelect.disabled = true;
+      timeSelect.innerHTML = '<option value="">Loading slots...</option>';
+      try {
+        const res = await fetch(`/api/schedule/availability?date=${date}`);
+        const { available } = await res.json();
+        if (!available.length) {
+          timeSelect.innerHTML = '<option value="">No slots available — pick another day</option>';
+        } else {
+          timeSelect.innerHTML = '<option value="">Select a time</option>' +
+            available.map(t => `<option value="${t}">${t}</option>`).join('');
+          timeSelect.disabled = false;
+        }
+      } catch {
+        timeSelect.innerHTML = '<option value="">Error loading slots</option>';
+      }
+    });
+  }
+
+  // Real-time validation
   const inputs = form.querySelectorAll('input, select, textarea');
   inputs.forEach(input => {
     input.addEventListener('blur', () => validateField(input));
     input.addEventListener('input', () => {
-      if (input.classList.contains('error')) {
-        validateField(input);
-      }
+      if (input.classList.contains('error')) validateField(input);
     });
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Validate all fields
     let isValid = true;
     inputs.forEach(input => {
-      if (!validateField(input)) {
-        isValid = false;
-      }
+      if (!validateField(input)) isValid = false;
     });
 
     if (!isValid) {
@@ -454,39 +501,45 @@ function initContactForm() {
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
-    // Collect form data
-    const formData = new FormData(form);
+    const isSchedule = contactType.value === 'schedule';
+    const payload = Object.fromEntries(new FormData(form).entries());
+    const endpoint = isSchedule ? '/api/schedule' : '/api/contact';
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData.entries()))
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        const msg = data.errors ? data.errors.join(', ') : 'Form submission failed';
-        throw new Error(msg);
-      }
-
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
 
-      showNotification("Thank you! We'll contact you within 24 hours.", 'success');
+      if (!response.ok) {
+        const msg = data.errors ? data.errors.join(', ') : (data.error || 'Submission failed');
+        throw new Error(msg);
+      }
+
+      showNotification(
+        isSchedule ? "Appointment scheduled! We'll confirm by phone." : "Thank you! We'll contact you within 24 hours.",
+        'success'
+      );
 
       form.reset();
-      inputs.forEach(input => {
-        input.classList.remove('success', 'error');
-        removeFieldError(input);
-      });
+      inputs.forEach(input => { input.classList.remove('success', 'error'); removeFieldError(input); });
+
+      // Reset schedule UI state
+      scheduleFields.style.display = 'none';
+      submitBtnText.textContent = 'Request Free Quote';
+      formNote.textContent = 'We typically respond within 24 hours';
+      if (timeSelect) { timeSelect.innerHTML = '<option value="">Pick a date first</option>'; timeSelect.disabled = true; }
 
     } catch (error) {
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
       console.error('Form submission error:', error);
-      showNotification('Oops! Something went wrong. Please try calling us directly.', 'error');
+      showNotification(error.message || 'Oops! Something went wrong. Please try calling us directly.', 'error');
     }
   });
 }
@@ -777,4 +830,121 @@ function initFAQ() {
       }
     });
   });
+}
+
+/* LIGHTBOX */
+function initLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  if (!lightbox) return;
+
+  const content = lightbox.querySelector('.lightbox-content');
+  const caption = lightbox.querySelector('.lightbox-caption');
+  let items = [];
+  let current = 0;
+
+  function buildItems() {
+    items = Array.from(document.querySelectorAll('.gallery-item[data-type="photo"]'));
+  }
+
+  function open(index) {
+    buildItems();
+    current = index;
+    const item = items[current];
+    const img = item.querySelector('img');
+    const title = item.querySelector('.gallery-title')?.textContent || '';
+    content.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+    caption.textContent = title;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function prev() { buildItems(); current = (current - 1 + items.length) % items.length; open(current); }
+  function next() { buildItems(); current = (current + 1) % items.length; open(current); }
+
+  document.querySelectorAll('.gallery-item[data-type="photo"]').forEach((item, i) => {
+    item.addEventListener('click', () => open(i));
+    item.style.cursor = 'zoom-in';
+  });
+
+  lightbox.querySelector('.lightbox-close').addEventListener('click', close);
+  lightbox.querySelector('.lightbox-prev').addEventListener('click', prev);
+  lightbox.querySelector('.lightbox-next').addEventListener('click', next);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape')     close();
+    if (e.key === 'ArrowLeft')  prev();
+    if (e.key === 'ArrowRight') next();
+  });
+}
+
+/* BEFORE & AFTER SLIDER */
+function initBeforeAfter() {
+  document.querySelectorAll('.ba-item').forEach(item => {
+    const afterEl = item.querySelector('.ba-after');
+    const handle  = item.querySelector('.ba-handle');
+    if (!afterEl || !handle) return;
+
+    let dragging = false;
+
+    function setPosition(x) {
+      const rect = item.getBoundingClientRect();
+      let pct = ((x - rect.left) / rect.width) * 100;
+      pct = Math.min(Math.max(pct, 2), 98);
+      afterEl.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      handle.style.left = `${pct}%`;
+    }
+
+    handle.addEventListener('mousedown', () => { dragging = true; });
+    document.addEventListener('mousemove', (e) => { if (dragging) setPosition(e.clientX); });
+    document.addEventListener('mouseup', () => { dragging = false; });
+
+    handle.addEventListener('touchstart', (e) => { dragging = true; e.preventDefault(); }, { passive: false });
+    document.addEventListener('touchmove', (e) => { if (dragging) setPosition(e.touches[0].clientX); }, { passive: true });
+    document.addEventListener('touchend', () => { dragging = false; });
+  });
+}
+
+
+/* BLOG PREVIEW */
+async function initBlogPreview() {
+  const grid = document.getElementById('blog-grid');
+  const empty = document.getElementById('blog-empty');
+  if (!grid) return;
+
+  try {
+    const res = await fetch('/api/blog');
+    const posts = await res.json();
+
+    if (!posts.length) {
+      empty?.classList.remove('hidden');
+      return;
+    }
+
+    const recent = posts.slice(0, 3);
+    grid.innerHTML = recent.map(post => {
+      const date = new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      const img = post.image_url
+        ? `<img class="blog-card-image" src="${post.image_url}" alt="${post.title}" loading="lazy">`
+        : `<div class="blog-card-image" style="display:flex;align-items:center;justify-content:center;font-size:3rem;">🌲</div>`;
+      return `
+        <a class="blog-card" href="/api/blog/${post.slug}" target="_blank">
+          ${img}
+          <div class="blog-card-body">
+            <div class="blog-card-date">${date}</div>
+            <div class="blog-card-title">${post.title}</div>
+            <div class="blog-card-excerpt">${post.excerpt}</div>
+          </div>
+        </a>
+      `;
+    }).join('');
+  } catch {
+    empty?.classList.remove('hidden');
+  }
 }

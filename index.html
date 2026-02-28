@@ -268,6 +268,34 @@
             <span class="gallery-category">Tree Removal</span>
           </div>
         </div>
+        <div class="gallery-item video-item" data-category="work" data-type="video">
+          <video controls preload="metadata">
+            <source src="pictures/Video%20Project1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="gallery-item video-item" data-category="work" data-type="video">
+          <video controls preload="metadata">
+            <source src="pictures/Video%20Project.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Before & After Section -->
+  <section id="before-after">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Results</span>
+        <h2 class="section-title">Before &amp; After</h2>
+        <p class="section-subtitle">Drag the slider to see the Tree Hoppers difference</p>
+      </div>
+      <div class="ba-grid" id="ba-grid">
+        <!-- Populated by JS or shown as placeholder -->
+        <div class="ba-placeholder">
+          <p>Before &amp; after photos coming soon!</p>
+          <p class="ba-placeholder-sub">Check back after our next job.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -399,7 +427,15 @@
           <p class="area-note">Don't see your area? Give us a call – we may still be able to help!</p>
         </div>
         <div class="map-container">
-          <div id="map"></div>
+          <div id="map">
+            <!-- Fallback iframe — shows without API key -->
+            <iframe
+              id="map-iframe"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393989.2!2d-104.8214!3d38.8339!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8713502674d4ca3b%3A0x4d16640e34b21f19!2sColorado%20Springs%2C%20CO!5e0!3m2!1sen!2sus!4v1"
+              width="100%" height="100%" style="border:0;border-radius:15px;" allowfullscreen loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade" title="Tree Hoppers Service Area">
+            </iframe>
+          </div>
         </div>
       </div>
     </div>
@@ -559,17 +595,38 @@
             </div>
           </div>
           <div class="form-group">
+            <label for="contact-type">How would you like to proceed?</label>
+            <select id="contact-type">
+              <option value="quote">We'll reach out to you</option>
+              <option value="schedule">Schedule an estimate now</option>
+            </select>
+          </div>
+          <div id="schedule-fields" style="display: none;">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="s-date">Preferred Date</label>
+                <input type="date" id="s-date" name="preferredDate">
+              </div>
+              <div class="form-group">
+                <label for="s-time">Preferred Time</label>
+                <select id="s-time" name="preferredTime" disabled>
+                  <option value="">Pick a date first</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
             <label for="message">Tell Us About Your Trees</label>
-            <textarea id="message" name="message" rows="4"></textarea>
+            <textarea id="message" name="message" rows="3"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">
-            <span class="btn-text">Request Free Quote</span>
+            <span class="btn-text" id="submit-btn-text">Request Free Quote</span>
             <span class="btn-loader"></span>
           </button>
-          <p class="form-note">We typically respond within 24 hours</p>
+          <p class="form-note" id="form-note">We typically respond within 24 hours</p>
         </form>
-      </div>
 
+      </div>
     </div>
   </section>
 
@@ -618,6 +675,23 @@
             <p>Most tree removals take 2-8 hours depending on size and complexity. Small trees may take just a few hours, while large or difficult trees requiring crane work can take a full day or more.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Preview Section -->
+  <section id="blog">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Tips &amp; Guides</span>
+        <h2 class="section-title">Tree Care Blog</h2>
+        <p class="section-subtitle">Advice from Colorado's tree experts</p>
+      </div>
+      <div class="blog-grid" id="blog-grid">
+        <!-- Populated by JS -->
+      </div>
+      <div id="blog-empty" class="blog-empty hidden">
+        <p>Blog posts coming soon — check back later!</p>
       </div>
     </div>
   </section>
@@ -672,6 +746,15 @@
 
   <!-- Back to Top Button -->
   <button id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" aria-label="Close">✕</button>
+    <button class="lightbox-prev" aria-label="Previous">‹</button>
+    <button class="lightbox-next" aria-label="Next">›</button>
+    <div class="lightbox-content"></div>
+    <div class="lightbox-caption"></div>
+  </div>
 
   <!-- Google Maps API -->
   <script>

@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../db');
-const { sendLeadEmail } = require('../email');
+const { sendLeadEmail, sendConfirmationEmail } = require('../email');
+const { sendLeadSms } = require('../sms');
 
 const VALID_SERVICES = ['pruning', 'removal', 'fire', 'storm', 'consultation', 'other'];
 
@@ -23,9 +24,7 @@ router.post('/', async (req, res, next) => {
     const phoneDigits = (phone || '').replace(/\D/g, '');
     if (phone && phoneDigits.length !== 10) errors.push('phone must be 10 digits');
 
-    if (errors.length > 0) {
-      return res.status(400).json({ errors });
-    }
+    if (errors.length > 0) return res.status(400).json({ errors });
 
     const db = getDb();
     const result = db.prepare(`
@@ -36,11 +35,12 @@ router.post('/', async (req, res, next) => {
       email.trim(), service, city.trim(), (message || '').trim()
     );
 
-    sendLeadEmail({ firstName, lastName, phone, email, service, city, message })
-      .catch(err => console.error('[email] Failed to send lead email:', err.message));
+    const lead = { firstName, lastName, phone, email, service, city, message };
+    sendLeadEmail(lead).catch(err => console.error('[email] Lead email failed:', err.message));
+    sendConfirmationEmail(lead).catch(err => console.error('[email] Confirmation email failed:', err.message));
+    sendLeadSms(lead).catch(err => console.error('[sms] Lead SMS failed:', err.message));
 
     res.status(201).json({ success: true, id: result.lastInsertRowid });
-
   } catch (err) {
     next(err);
   }
