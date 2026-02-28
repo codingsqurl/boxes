@@ -3,10 +3,74 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 const { getDb } = require('../db');
 const requireApiKey = require('../middleware/requireApiKey');
+const requireDeveloper = require('../middleware/requireDeveloper');
 
-// All admin routes require API key
+// ── Login ─────────────────────────────────────────────────────────────────────
+router.post('/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+
+  const db = getDb();
+  const user = db.prepare(`SELECT * FROM admin_users WHERE username = ?`).get(username);
+  if (!user || !bcrypt.compareSync(password, user.password_hash)) {
+    return res.status(401).json({ error: 'Invalid username or password' });
+  }
+
+  const apiKey = user.role === 'developer'
+    ? process.env.DEVELOPER_API_KEY
+    : process.env.ADMIN_API_KEY;
+
+  if (!apiKey) return res.status(500).json({ error: 'API keys not configured in .env' });
+
+  res.json({ apiKey, role: user.role, username: user.username });
+});
+
+// ── User management (developer only) ─────────────────────────────────────────
+router.get('/users', requireDeveloper, (req, res) => {
+  const db = getDb();
+  const users = db.prepare(`SELECT id, username, role, created_at FROM admin_users ORDER BY created_at ASC`).all();
+  res.json(users);
+});
+
+router.post('/users', requireDeveloper, async (req, res) => {
+  const { username, password, role } = req.body || {};
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+  if (!['admin', 'developer'].includes(role)) return res.status(400).json({ error: 'Role must be admin or developer' });
+
+  const db = getDb();
+  const hash = bcrypt.hashSync(password, 12);
+  try {
+    const result = db.prepare(`INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, ?)`).run(username, hash, role);
+    res.status(201).json({ id: result.lastInsertRowid, username, role });
+  } catch {
+    res.status(409).json({ error: 'Username already exists' });
+  }
+});
+
+router.delete('/users/:id', requireDeveloper, (req, res) => {
+  const db = getDb();
+  const user = db.prepare(`SELECT * FROM admin_users WHERE id = ?`).get(req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  if (user.role === 'developer') return res.status(403).json({ error: 'Cannot delete a developer account' });
+  db.prepare(`DELETE FROM admin_users WHERE id = ?`).run(req.params.id);
+  res.json({ ok: true });
+});
+
+router.patch('/users/:id/password', requireDeveloper, (req, res) => {
+  const { password } = req.body || {};
+  if (!password) return res.status(400).json({ error: 'Password required' });
+  const db = getDb();
+  const user = db.prepare(`SELECT id FROM admin_users WHERE id = ?`).get(req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  const hash = bcrypt.hashSync(password, 12);
+  db.prepare(`UPDATE admin_users SET password_hash = ? WHERE id = ?`).run(hash, req.params.id);
+  res.json({ ok: true });
+});
+
+// All other admin routes require API key
 router.use(requireApiKey);
 
 // ── File upload setup ─────────────────────────────────────────────────────────

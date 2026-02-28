@@ -2,6 +2,7 @@
 
 const API = '/api/admin';
 let apiKey = '';
+let userRole = '';
 
 // ── Tiny Markdown renderer ────────────────────────────────────────────────────
 function renderMarkdown(md) {
@@ -41,36 +42,47 @@ function showLogin() {
 function showDashboard() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
+  // Show dev-only UI elements for developers
+  document.querySelectorAll('.dev-only').forEach(el => {
+    el.classList.toggle('hidden', userRole !== 'developer');
+  });
   loadLeads();
 }
 
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const key = document.getElementById('api-key-input').value.trim();
+  const username = document.getElementById('username-input').value.trim();
+  const password = document.getElementById('password-input').value;
   const err = document.getElementById('login-error');
 
-  // Verify key against a protected endpoint
-  apiKey = key;
-  const { ok } = await apiJson(`${API}/leads`);
+  const { ok, data } = await apiJson(`${API}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
 
-  if (ok) {
-    localStorage.setItem('th_admin_key', key);
+  if (ok && data.apiKey) {
+    apiKey = data.apiKey;
+    userRole = data.role;
+    localStorage.setItem('th_admin_key', apiKey);
+    localStorage.setItem('th_admin_role', userRole);
     err.classList.add('hidden');
     showDashboard();
   } else {
-    apiKey = '';
     err.classList.remove('hidden');
   }
 });
 
 document.getElementById('logout-btn').addEventListener('click', () => {
   localStorage.removeItem('th_admin_key');
+  localStorage.removeItem('th_admin_role');
   apiKey = '';
+  userRole = '';
   showLogin();
 });
 
 // ── Tab navigation ────────────────────────────────────────────────────────────
-const tabLoaders = { leads: loadLeads, appointments: loadAppointments, blog: loadBlog, reviews: loadReviews };
+const tabLoaders = { leads: loadLeads, appointments: loadAppointments, blog: loadBlog, reviews: loadReviews, users: loadUsers };
 
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -350,14 +362,80 @@ async function deleteReview(id) {
   if (ok) loadReviews();
 }
 
+// ── USERS (developer only) ─────────────────────────────────────────────────────
+async function loadUsers() {
+  const list = document.getElementById('users-list');
+  list.innerHTML = '<div class="loading">Loading...</div>';
+
+  const { ok, data } = await apiJson(`${API}/users`);
+  if (!ok) { list.innerHTML = '<div class="empty">Failed to load users.</div>'; return; }
+
+  list.innerHTML = data.map(u => `
+    <div class="user-card">
+      <div class="user-info">
+        <div class="card-name">${u.username} <span class="badge badge-${u.role}">${u.role}</span></div>
+        <div class="card-date">Added ${formatDate(u.created_at)}</div>
+      </div>
+      <div class="card-actions">
+        <input class="notes-input" type="password" placeholder="New password"
+          onblur="resetUserPassword(${u.id}, this)" style="width:180px">
+        ${u.role !== 'developer' ? `<button class="btn-danger" onclick="deleteUser(${u.id})">Remove</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('add-user-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('new-username').value.trim();
+  const password = document.getElementById('new-password').value;
+  const role     = document.getElementById('new-role').value;
+
+  const { ok, data } = await apiJson(`${API}/users`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, role }),
+  });
+
+  if (ok) {
+    e.target.reset();
+    loadUsers();
+  } else {
+    alert(data.error || 'Failed to add user.');
+  }
+});
+
+async function deleteUser(id) {
+  if (!confirm('Remove this user? They will no longer be able to log in.')) return;
+  const { ok } = await apiJson(`${API}/users/${id}`, { method: 'DELETE' });
+  if (ok) loadUsers();
+}
+
+async function resetUserPassword(id, input) {
+  const password = input.value.trim();
+  if (!password) return;
+  const { ok } = await apiJson(`${API}/users/${id}/password`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  });
+  if (ok) { input.value = ''; input.placeholder = 'Password updated ✓'; }
+  else alert('Failed to update password.');
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
-const savedKey = localStorage.getItem('th_admin_key');
+const savedKey  = localStorage.getItem('th_admin_key');
+const savedRole = localStorage.getItem('th_admin_role');
 if (savedKey) {
   apiKey = savedKey;
-  // Verify it still works
+  userRole = savedRole || '';
   apiJson(`${API}/leads`).then(({ ok }) => {
     if (ok) showDashboard();
-    else { localStorage.removeItem('th_admin_key'); showLogin(); }
+    else {
+      localStorage.removeItem('th_admin_key');
+      localStorage.removeItem('th_admin_role');
+      showLogin();
+    }
   });
 } else {
   showLogin();
@@ -371,3 +449,5 @@ window.togglePublished = togglePublished;
 window.editPost = editPost;
 window.deletePost = deletePost;
 window.deleteReview = deleteReview;
+window.deleteUser = deleteUser;
+window.resetUserPassword = resetUserPassword;

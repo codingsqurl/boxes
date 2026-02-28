@@ -15,11 +15,11 @@
   <div class="login-card">
     <div class="login-logo">🌲</div>
     <h1>Tree Hoppers Admin</h1>
-    <p>Enter your admin API key to continue.</p>
     <form id="login-form">
-      <input type="password" id="api-key-input" placeholder="Admin API Key" autocomplete="current-password" required>
+      <input type="text" id="username-input" placeholder="Username" autocomplete="username" required>
+      <input type="password" id="password-input" placeholder="Password" autocomplete="current-password" required>
       <button type="submit" class="btn-primary">Sign In</button>
-      <p id="login-error" class="login-error hidden">Invalid API key. Try again.</p>
+      <p id="login-error" class="login-error hidden">Invalid username or password.</p>
     </form>
   </div>
 </div>
@@ -45,6 +45,9 @@
       </button>
       <button class="nav-item" data-tab="reviews">
         <span class="nav-icon">⭐</span> Reviews
+      </button>
+      <button class="nav-item dev-only hidden" data-tab="users">
+        <span class="nav-icon">👥</span> Users
       </button>
     </nav>
     <button id="logout-btn" class="logout-btn">Sign Out</button>
@@ -150,6 +153,39 @@
       </div>
       <div id="reviews-list" class="card-list">
         <div class="loading">Loading reviews...</div>
+      </div>
+    </section>
+
+    <!-- USERS TAB (developer only) -->
+    <section id="tab-users" class="tab-content">
+      <div class="tab-header">
+        <h2>Users</h2>
+      </div>
+      <div class="users-add-form">
+        <h3>Add New User</h3>
+        <form id="add-user-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="new-username" placeholder="e.g. paul" required>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="new-password" placeholder="Strong password" required>
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="new-role">
+                <option value="admin">Admin</option>
+                <option value="developer">Developer</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Add User</button>
+        </form>
+      </div>
+      <div id="users-list" class="card-list">
+        <div class="loading">Loading users...</div>
       </div>
     </section>
 

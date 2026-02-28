@@ -83,11 +83,32 @@ function initDb() {
       data      TEXT NOT NULL,
       cached_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS admin_users (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      username      TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      role          TEXT NOT NULL DEFAULT 'admin',
+      created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   // Migrate existing leads table if status/notes columns are missing
   try { db.exec(`ALTER TABLE leads ADD COLUMN status TEXT NOT NULL DEFAULT 'new'`); } catch {}
   try { db.exec(`ALTER TABLE leads ADD COLUMN notes TEXT`); } catch {}
+
+  // Seed developer account from env if no developer exists yet
+  const { ADMIN_USERNAME, ADMIN_PASSWORD } = process.env;
+  if (ADMIN_USERNAME && ADMIN_PASSWORD) {
+    const existing = db.prepare(`SELECT id FROM admin_users WHERE role = 'developer'`).get();
+    if (!existing) {
+      const bcrypt = require('bcryptjs');
+      const hash = bcrypt.hashSync(ADMIN_PASSWORD, 12);
+      db.prepare(`INSERT OR IGNORE INTO admin_users (username, password_hash, role) VALUES (?, ?, 'developer')`)
+        .run(ADMIN_USERNAME, hash);
+      console.log(`Developer account seeded for: ${ADMIN_USERNAME}`);
+    }
+  }
 
   console.log('Database initialized');
 }
