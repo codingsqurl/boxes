@@ -115,7 +115,25 @@ function initDb() {
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
-    -- ── Indexes for fast queries under load ──────────────────────────────────
+    CREATE TABLE IF NOT EXISTS email_verifications (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      token      TEXT    NOT NULL UNIQUE,
+      type       TEXT    NOT NULL CHECK(type IN ('lead', 'appointment')),
+      record_id  INTEGER NOT NULL,
+      created_at TEXT    NOT NULL DEFAULT (datetime('now')),
+      used_at    TEXT
+    );
+
+  `);
+
+  // Migrate existing tables — ALTER TABLE is a no-op if column already exists
+  try { db.exec(`ALTER TABLE leads ADD COLUMN status TEXT NOT NULL DEFAULT 'new'`); } catch {}
+  try { db.exec(`ALTER TABLE leads ADD COLUMN notes TEXT`); } catch {}
+  try { db.exec(`ALTER TABLE leads ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`); } catch {}
+  try { db.exec(`ALTER TABLE appointments ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`); } catch {}
+
+  // Indexes — must run after migrations so all columns exist
+  db.exec(`
     CREATE INDEX IF NOT EXISTS idx_leads_status   ON leads(status);
     CREATE INDEX IF NOT EXISTS idx_leads_created  ON leads(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_leads_email    ON leads(email);
@@ -126,23 +144,8 @@ function initDb() {
     CREATE INDEX IF NOT EXISTS idx_blog_slug      ON blog_posts(slug);
     CREATE INDEX IF NOT EXISTS idx_blog_published ON blog_posts(published, created_at DESC);
 
-    CREATE TABLE IF NOT EXISTS email_verifications (
-      id         INTEGER PRIMARY KEY AUTOINCREMENT,
-      token      TEXT    NOT NULL UNIQUE,
-      type       TEXT    NOT NULL CHECK(type IN ('lead', 'appointment')),
-      record_id  INTEGER NOT NULL,
-      created_at TEXT    NOT NULL DEFAULT (datetime('now')),
-      used_at    TEXT
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_verify_token ON email_verifications(token);
+    CREATE INDEX IF NOT EXISTS idx_verify_token   ON email_verifications(token);
   `);
-
-  // Migrate existing tables — ALTER TABLE is a no-op if column already exists
-  try { db.exec(`ALTER TABLE leads ADD COLUMN status TEXT NOT NULL DEFAULT 'new'`); } catch {}
-  try { db.exec(`ALTER TABLE leads ADD COLUMN notes TEXT`); } catch {}
-  try { db.exec(`ALTER TABLE leads ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`); } catch {}
-  try { db.exec(`ALTER TABLE appointments ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`); } catch {}
 
   // Seed default email templates if not already present
   const defaultTemplates = [
