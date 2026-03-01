@@ -174,8 +174,12 @@ let server;
 
 async function start() {
   initDb();
-  // Only worker 1 seeds to avoid concurrent DB writes at startup
-  if (cluster.worker.id === 1) await seedReviews();
+  // Only worker 1 seeds and runs the notification poller to avoid duplicate sends
+  if (cluster.worker.id === 1) {
+    await seedReviews();
+    const { processPendingNotifications } = require('./notify');
+    setInterval(processPendingNotifications, 60_000);
+  }
 
   server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Worker ${process.pid} listening on :${PORT}`);

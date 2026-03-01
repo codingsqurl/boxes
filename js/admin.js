@@ -84,7 +84,7 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 });
 
 // ── Tab navigation ────────────────────────────────────────────────────────────
-const tabLoaders = { leads: loadLeads, appointments: loadAppointments, blog: loadBlog, reviews: loadReviews, suggestions: loadSuggestions, settings: loadSettings, users: loadUsers };
+const tabLoaders = { leads: loadLeads, appointments: loadAppointments, blog: loadBlog, reviews: loadReviews, suggestions: loadSuggestions, account: loadAccount, settings: loadSettings, users: loadUsers };
 
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -551,23 +551,102 @@ document.getElementById('suggestion-form').addEventListener('submit', async (e) 
   }
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-const savedKey  = localStorage.getItem('th_admin_key');
-const savedRole = localStorage.getItem('th_admin_role');
-if (savedKey) {
-  apiKey = savedKey;
-  userRole = savedRole || '';
-  apiJson(`${API}/leads`).then(({ ok }) => {
-    if (ok) showDashboard();
-    else {
-      localStorage.removeItem('th_admin_key');
-      localStorage.removeItem('th_admin_role');
-      showLogin();
-    }
+// ── Setup form ────────────────────────────────────────────────────────────────
+document.getElementById('setup-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('setup-username').value.trim();
+  const password = document.getElementById('setup-password').value;
+  const confirm  = document.getElementById('setup-confirm').value;
+  const err      = document.getElementById('setup-error');
+
+  if (password !== confirm) {
+    err.textContent = 'Passwords do not match.';
+    err.classList.remove('hidden');
+    return;
+  }
+
+  const res  = await fetch(`${API}/setup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
   });
-} else {
+  const data = await res.json();
+
+  if (res.ok) {
+    // Auto-login with the new credentials
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('username-input').value = username;
+    document.getElementById('password-input').value = password;
+    document.getElementById('login-form').requestSubmit();
+  } else {
+    err.textContent = data.error || 'Setup failed. Please try again.';
+    err.classList.remove('hidden');
+  }
+});
+
+// ── My Account ────────────────────────────────────────────────────────────────
+function loadAccount() {}
+
+document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const currentPassword = document.getElementById('cp-current').value;
+  const newPassword     = document.getElementById('cp-new').value;
+  const confirm         = document.getElementById('cp-confirm').value;
+  const msg             = document.getElementById('cp-message');
+  const username        = localStorage.getItem('th_admin_username');
+
+  if (newPassword !== confirm) {
+    msg.textContent = 'New passwords do not match.';
+    msg.className = 'login-error';
+    msg.classList.remove('hidden');
+    return;
+  }
+
+  const { ok, data } = await apiJson(`${API}/me/password`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, currentPassword, newPassword }),
+  });
+
+  if (ok) {
+    e.target.reset();
+    msg.textContent = 'Password updated successfully.';
+    msg.className = 'suggestion-success';
+  } else {
+    msg.textContent = data.error || 'Failed to update password.';
+    msg.className = 'login-error';
+  }
+  msg.classList.remove('hidden');
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  // Check if first-time setup is needed
+  try {
+    const res  = await fetch(`${API}/setup`);
+    const data = await res.json();
+    if (data.needsSetup) {
+      document.getElementById('setup-screen').classList.remove('hidden');
+      return;
+    }
+  } catch { /* server unreachable — fall through to login */ }
+
+  // Restore existing session
+  const savedKey  = localStorage.getItem('th_admin_key');
+  const savedRole = localStorage.getItem('th_admin_role');
+  if (savedKey) {
+    apiKey   = savedKey;
+    userRole = savedRole || '';
+    const { ok } = await apiJson(`${API}/leads`);
+    if (ok) { showDashboard(); return; }
+    localStorage.removeItem('th_admin_key');
+    localStorage.removeItem('th_admin_role');
+  }
   showLogin();
 }
+
+init();
 
 // Expose functions called from inline event handlers
 window.updateLeadStatus = updateLeadStatus;

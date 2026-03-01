@@ -7,6 +7,28 @@ const bcrypt = require('bcryptjs');
 const { getDb } = require('../db');
 const { requireApiKey, requireDeveloper } = require('../middleware/auth');
 
+// ── First-time setup ──────────────────────────────────────────────────────────
+router.get('/setup', (req, res) => {
+  const db = getDb();
+  const { n } = db.prepare('SELECT COUNT(*) as n FROM admin_users').get();
+  res.json({ needsSetup: n === 0 });
+});
+
+router.post('/setup', (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+  if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+
+  const db = getDb();
+  const { n } = db.prepare('SELECT COUNT(*) as n FROM admin_users').get();
+  if (n > 0) return res.status(403).json({ error: 'Setup already complete' });
+
+  const hash = bcrypt.hashSync(password, 12);
+  db.prepare(`INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, 'developer')`)
+    .run(username.trim(), hash);
+  res.status(201).json({ ok: true });
+});
+
 // ── Login ─────────────────────────────────────────────────────────────────────
 router.post('/login', (req, res) => {
   const { username, password } = req.body || {};
@@ -71,6 +93,24 @@ router.patch('/users/:id/password', requireDeveloper, (req, res) => {
 
 // All other admin routes require API key
 router.use(requireApiKey);
+
+// ── Change own password ───────────────────────────────────────────────────────
+router.patch('/me/password', (req, res) => {
+  const { username, currentPassword, newPassword } = req.body || {};
+  if (!username || !currentPassword || !newPassword)
+    return res.status(400).json({ error: 'username, currentPassword, and newPassword are required' });
+  if (newPassword.length < 8)
+    return res.status(400).json({ error: 'New password must be at least 8 characters' });
+
+  const db   = getDb();
+  const user = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
+  if (!user || !bcrypt.compareSync(currentPassword, user.password_hash))
+    return res.status(401).json({ error: 'Current password is incorrect' });
+
+  const hash = bcrypt.hashSync(newPassword, 12);
+  db.prepare('UPDATE admin_users SET password_hash = ? WHERE id = ?').run(hash, user.id);
+  res.json({ ok: true });
+});
 
 // ── File upload setup ─────────────────────────────────────────────────────────
 const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'data', 'uploads');

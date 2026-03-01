@@ -2,8 +2,8 @@ const express = require('express');
 const router  = express.Router();
 const crypto  = require('crypto');
 const { getDb } = require('../db');
-const { sendAppointmentNotification, sendVerificationEmail } = require('../email');
-const { sendAppointmentSms } = require('../sms');
+const { sendVerificationEmail } = require('../email');
+const { notifyPaulForAppt } = require('../notify');
 const { validateContact, VALID_SERVICES } = require('../constants');
 
 const TIME_SLOTS = [
@@ -70,9 +70,8 @@ router.post('/', async (req, res, next) => {
 
     const appt = { firstName, lastName, phone, email, service, city, preferredDate, preferredTime, message };
 
-    // Notify Paul immediately (doesn't wait for email verification)
-    sendAppointmentNotification(appt).catch(err => console.error('[email] Appointment notification failed:', err.message));
-    sendAppointmentSms(appt).catch(err => console.error('[sms] Appointment SMS failed:', err.message));
+    // Notify Paul during business hours (9:30 AM – 7:00 PM MT); held until then if outside window
+    notifyPaulForAppt(result.lastInsertRowid);
 
     // Send verification email to customer — confirmation is sent after they click the link
     const token = crypto.randomBytes(32).toString('hex');

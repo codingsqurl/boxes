@@ -2,8 +2,8 @@ const express = require('express');
 const router  = express.Router();
 const crypto  = require('crypto');
 const { getDb } = require('../db');
-const { sendLeadEmail, sendVerificationEmail } = require('../email');
-const { sendLeadSms } = require('../sms');
+const { sendVerificationEmail } = require('../email');
+const { notifyPaulForLead } = require('../notify');
 const { validateContact } = require('../constants');
 
 router.post('/', async (req, res, next) => {
@@ -24,9 +24,8 @@ router.post('/', async (req, res, next) => {
 
     const lead = { firstName, lastName, phone, email, service, city, message };
 
-    // Notify Paul immediately (doesn't wait for email verification)
-    sendLeadEmail(lead).catch(err => console.error('[email] Lead email failed:', err.message));
-    sendLeadSms(lead).catch(err => console.error('[sms] Lead SMS failed:', err.message));
+    // Notify Paul during business hours (9:30 AM – 7:00 PM MT); held until then if outside window
+    notifyPaulForLead(result.lastInsertRowid);
 
     // Send verification email to customer — confirmation is sent after they click the link
     const token = crypto.randomBytes(32).toString('hex');
