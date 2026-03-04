@@ -46,7 +46,7 @@
 
 html {
   scroll-padding-top: 80px;
-  /* Smooth scroll handled by JavaScript for better cross-browser support */
+  /* Smooth scroll cross-browser JS */
 }
 
 body {
