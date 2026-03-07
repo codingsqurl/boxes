@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const VALID_HEIGHTS      = [200, 350, 600, 1000, 1500];
-const VALID_SERVICES     = [0.5, 1, 0.7, 0.6];
+const VALID_SERVICES     = [0.5, 1, 0.7, 0.6, 0.3, 1.0];  // 0.3=consultation, 1.0=other
 const VALID_ACCESSIBILITY = [1, 1.2, 1.5];
 
 router.post('/', (req, res) => {

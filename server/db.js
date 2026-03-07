@@ -133,6 +133,8 @@ function initDb() {
   try { db.exec(`ALTER TABLE appointments ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`); } catch {}
   try { db.exec(`ALTER TABLE leads ADD COLUMN paul_notified INTEGER NOT NULL DEFAULT 0`); } catch {}
   try { db.exec(`ALTER TABLE appointments ADD COLUMN paul_notified INTEGER NOT NULL DEFAULT 0`); } catch {}
+  try { db.exec(`ALTER TABLE leads ADD COLUMN notify_attempts INTEGER NOT NULL DEFAULT 0`); } catch {}
+  try { db.exec(`ALTER TABLE appointments ADD COLUMN notify_attempts INTEGER NOT NULL DEFAULT 0`); } catch {}
 
   // Indexes — must run after migrations so all columns exist
   db.exec(`

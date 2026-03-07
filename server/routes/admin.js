@@ -265,6 +265,20 @@ router.patch('/blog/:id', upload.single('image'), (req, res) => {
   res.json({ success: true });
 });
 
+router.delete('/blog/:id', requireApiKey, (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
+
+  const db = getDb();
+  const post = db.prepare('SELECT image_url FROM blog_posts WHERE id = ?').get(id);
+  if (!post) return res.status(404).json({ error: 'Post not found' });
+
+  db.prepare('DELETE FROM blog_posts WHERE id = ?').run(id);
+  deleteImageFile(post.image_url);
+
+  res.json({ success: true });
+});
+
 // ── EMAIL TEMPLATES (developer only) ─────────────────────────────────────────
 router.get('/templates', requireDeveloper, (req, res) => {
   const db = getDb();
@@ -321,20 +335,6 @@ router.delete('/suggestions/:id', requireDeveloper, (req, res) => {
   const result = db.prepare('DELETE FROM suggestions WHERE id = ?').run(id);
   if (result.changes === 0) return res.status(404).json({ error: 'Suggestion not found' });
   res.json({ ok: true });
-});
-
-router.delete('/blog/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
-
-  const db = getDb();
-  const post = db.prepare('SELECT image_url FROM blog_posts WHERE id = ?').get(id);
-  if (!post) return res.status(404).json({ error: 'Post not found' });
-
-  db.prepare('DELETE FROM blog_posts WHERE id = ?').run(id);
-  deleteImageFile(post.image_url);
-
-  res.json({ success: true });
 });
 
 module.exports = router;
