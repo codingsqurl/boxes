@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Tree Hoppers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:    #9dc334;
+      --primary-dark: #7da329;
+      --dark:       #041e1f;
+      --text:       #2c2c2c;
+      --bg:         #f8f9f4;
+      --card-bg:    #ffffff;
+      --radius:     12px;
+      --font-heading: 'Montserrat', sans-serif;
+      --font-body:    'Open Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--dark);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-brand {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-back {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #aaa;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .topbar-back:hover { color: var(--primary); }
+
+    /* ── Article ── */
+    .article-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .article-meta {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 16px;
+      letter-spacing: 0.03em;
+    }
+
+    .article-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .article-hero {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: 36px;
+    }
+
+    /* ── Rendered markdown ── */
+    .article-body { line-height: 1.8; font-size: 1.05rem; color: #333; }
+    .article-body p  { margin-bottom: 1.2em; }
+    .article-body h1 { font-family: var(--font-heading); font-size: 1.7rem; font-weight: 800; color: var(--dark); margin: 1.8em 0 0.6em; }
+    .article-body h2 { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; color: var(--dark); margin: 1.6em 0 0.5em; }
+    .article-body h3 { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; color: var(--dark); margin: 1.4em 0 0.4em; }
+    .article-body ul,
+    .article-body ol { margin: 0 0 1.2em 1.5em; }
+    .article-body li { margin-bottom: 0.4em; }
+    .article-body strong { font-weight: 600; }
+    .article-body em { font-style: italic; }
+    .article-body a  { color: var(--primary-dark); text-underline-offset: 3px; }
+    .article-body a:hover { color: var(--primary); }
+    .article-body blockquote {
+      border-left: 4px solid var(--primary);
+      padding: 12px 20px;
+      margin: 1.4em 0;
+      background: #f0f5e8;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: #555;
+    }
+    .article-body code {
+      background: #eef2e6;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.9em;
+      font-family: monospace;
+    }
+
+    /* ── States ── */
+    .state {
+      max-width: 480px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .state-icon { font-size: 3rem; margin-bottom: 16px; }
+    .state h2 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+    .state p { color: #666; line-height: 1.6; margin-bottom: 24px; }
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: var(--dark);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); }
+
+    /* ── Footer strip ── */
+    .footer-strip {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.8rem;
+      color: #aaa;
+      border-top: 1px solid #e8eee0;
+    }
+
+    #loading, #error, #content { display: none; }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a href="/" class="topbar-brand">TREE HOPPERS</a>
+  <a href="/#blog" class="topbar-back">← Back to Blog</a>
+</nav>
+
+<!-- Loading state -->
+<div id="loading" class="state">
+  <div class="state-icon">🌲</div>
+  <h2>Loading post...</h2>
+  <p>Just a moment.</p>
+</div>
+
+<!-- Error state -->
+<div id="error" class="state">
+  <div class="state-icon">🍂</div>
+  <h2 id="error-heading">Post Not Found</h2>
+  <p id="error-body">We couldn't find this blog post. It may have been removed or the link is incorrect.</p>
+  <a href="/#blog" class="btn">Back to Blog</a>
+</div>
+
+<!-- Article -->
+<div id="content">
+  <article class="article-wrap">
+    <div class="article-meta" id="article-meta"></div>
+    <h1 class="article-title" id="article-title"></h1>
+    <img class="article-hero" id="article-hero" src="" alt="" style="display:none;">
+    <div class="article-body" id="article-body"></div>
+  </article>
+</div>
+
+<div class="footer-strip">Tree Hoppers — Colorado Springs Tree Care &nbsp;·&nbsp; <a href="/">treehopperscos.com</a></div>
+
+<script>
+  // Minimal markdown renderer (mirrors admin.js)
+  function renderMarkdown(md) {
+    return md
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(.+)$/gm, (line) => line.startsWith('<') ? line : `<p>${line}</p>`);
+  }
+
+  function show(id) {
+    ['loading', 'error', 'content'].forEach(s => {
+      document.getElementById(s).style.display = s === id ? '' : 'none';
+    });
+  }
+
+  async function load() {
+    const slug = new URLSearchParams(window.location.search).get('slug');
+    if (!slug) {
+      document.getElementById('error-heading').textContent = 'No post specified';
+      document.getElementById('error-body').textContent = 'No blog post slug was provided in the URL.';
+      show('error');
+      return;
+    }
+
+    show('loading');
+
+    try {
+      const res = await fetch(`/api/blog/${encodeURIComponent(slug)}`);
+      if (res.status === 404) {
+        show('error');
+        return;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const post = await res.json();
+
+      // Update page title + meta
+      document.title = `${post.title} — Tree Hoppers`;
+
+      const date = new Date(post.created_at).toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      });
+
+      document.getElementById('article-meta').textContent = date;
+      document.getElementById('article-title').textContent = post.title;
+      document.getElementById('article-body').innerHTML = renderMarkdown(post.content || post.excerpt || '');
+
+      if (post.image_url) {
+        const img = document.getElementById('article-hero');
+        img.src = post.image_url;
+        img.alt = post.title;
+        img.style.display = '';
+      }
+
+      show('content');
+    } catch (err) {
+      document.getElementById('error-heading').textContent = 'Something went wrong';
+      document.getElementById('error-body').textContent = 'Failed to load this post. Please try again later.';
+      show('error');
+    }
+  }
+
+  load();
+</script>
+
+</body>
+</html>

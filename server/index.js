@@ -172,10 +172,31 @@ app.use((err, req, res, next) => {
 // ── Boot ──────────────────────────────────────────────────────────────────────
 let server;
 
+function autoSetupAdmin() {
+  const { getDb } = require('./db');
+  const bcrypt    = require('bcryptjs');
+  const db = getDb();
+  const { n } = db.prepare('SELECT COUNT(*) as n FROM admin_users').get();
+  if (n > 0) return;
+
+  const username = process.env.ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
+  if (!username || !password) {
+    console.warn('[setup] No admin users exist and ADMIN_USERNAME/ADMIN_PASSWORD are not set.');
+    console.warn('[setup] Set them in .env or POST to /api/admin/setup to create the first account.');
+    return;
+  }
+
+  const hash = bcrypt.hashSync(password, 12);
+  db.prepare(`INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, 'developer')`).run(username.trim(), hash);
+  console.log(`[setup] Admin account created for "${username.trim()}".`);
+}
+
 async function start() {
   initDb();
   // Only worker 1 seeds and runs the notification poller to avoid duplicate sends
   if (cluster.worker.id === 1) {
+    autoSetupAdmin();
     await seedReviews();
     const { processPendingNotifications } = require('./notify');
     setInterval(processPendingNotifications, 60_000);

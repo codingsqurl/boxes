@@ -934,7 +934,7 @@ async function initBlogPreview() {
         ? `<img class="blog-card-image" src="${post.image_url}" alt="${post.title}" loading="lazy">`
         : `<div class="blog-card-image" style="display:flex;align-items:center;justify-content:center;font-size:3rem;">🌲</div>`;
       return `
-        <a class="blog-card" href="/api/blog/${post.slug}" target="_blank">
+        <a class="blog-card" href="/pages/blog-post.html?slug=${post.slug}">
           ${img}
           <div class="blog-card-body">
             <div class="blog-card-date">${date}</div>
